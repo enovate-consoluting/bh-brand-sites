@@ -2,7 +2,6 @@ import { headers } from 'next/headers';
 import Image from 'next/image';
 import { getSiteConfig } from '@/lib/get-site-config';
 import { VerifyForm } from '@/components/VerifyForm';
-import { SocialLinks } from '@/components/SocialLinks';
 
 export default async function HomePage() {
   const headersList = await headers();
@@ -27,48 +26,70 @@ export default async function HomePage() {
   const { client, branding, socialLinks } = siteConfig;
   const backgroundColor = branding?.background_color || '#ffffff';
   const textColor = branding?.text_color || '#000000';
+  const buttonColor = branding?.button_color || '#000000';
+  const buttonTextColor = branding?.button_text_color || '#ffffff';
   const logoUrl = branding?.large_logo_url || client.logo_url;
+
+  // Find linktree link if exists
+  const linktreeLink = socialLinks.find(link => link.platform.toLowerCase() === 'linktree');
 
   return (
     <main
-      className="min-h-screen flex flex-col items-center justify-center p-8"
+      className="min-h-screen"
       style={{ backgroundColor, color: textColor }}
     >
-      <div className="w-full max-w-lg flex flex-col items-center gap-8">
-        {logoUrl && (
-          <div className="relative w-48 h-24">
-            <Image
-              src={logoUrl}
-              alt={client.company_name}
-              fill
-              className="object-contain"
-              priority
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col items-center justify-center min-h-[80vh]">
+          {/* Logo */}
+          {logoUrl && (
+            <div className="w-full max-w-xs md:max-w-sm mb-8">
+              <Image
+                src={logoUrl}
+                alt={client.company_name}
+                width={400}
+                height={400}
+                className="w-full h-auto"
+                priority
+                unoptimized={logoUrl.endsWith('.gif')}
+              />
+            </div>
+          )}
+
+          {/* Verify Section */}
+          <div className="w-full max-w-md text-center">
+            <h1 className="text-2xl md:text-3xl font-bold mb-6 uppercase tracking-wide">
+              Verify Your Product
+            </h1>
+
+            <VerifyForm
+              buttonColor={buttonColor}
+              buttonTextColor={buttonTextColor}
             />
-          </div>
-        )}
 
-        <div className="text-center">
-          <h1 className="text-3xl font-bold mb-2">Product Verification</h1>
-          <p className="opacity-80">
-            Verify the authenticity of your {client.company_name} product
-          </p>
+            {/* Follow Us */}
+            {linktreeLink && (
+              <div className="mt-8">
+                <h2 className="text-xl font-bold mb-4">
+                  Follow us:
+                  <a
+                    href={`https://linktr.ee/${linktreeLink.handle}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block ml-3 align-middle"
+                  >
+                    <Image
+                      src="/images/fryd/linktree.png"
+                      alt="Linktree"
+                      width={60}
+                      height={60}
+                      className="inline-block"
+                    />
+                  </a>
+                </h2>
+              </div>
+            )}
+          </div>
         </div>
-
-        <VerifyForm
-          primaryColor={client.primary_color}
-          textColor={textColor}
-        />
-
-        {socialLinks.length > 0 && (
-          <div className="mt-8">
-            <p className="text-sm opacity-60 mb-3 text-center">Follow us</p>
-            <SocialLinks links={socialLinks} textColor={textColor} />
-          </div>
-        )}
-
-        <footer className="mt-12 text-sm opacity-50">
-          &copy; {new Date().getFullYear()} {client.company_name}. All rights reserved.
-        </footer>
       </div>
     </main>
   );

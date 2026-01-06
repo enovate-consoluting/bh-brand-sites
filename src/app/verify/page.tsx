@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getSiteConfig } from '@/lib/get-site-config';
 import { createClient } from '@/lib/supabase/server';
-import type { Product, NfcChip } from '@/types/database';
 
 interface VerifyPageProps {
   searchParams: Promise<{ code?: string }>;
@@ -11,48 +10,32 @@ interface VerifyPageProps {
 
 interface VerificationResult {
   verified: boolean;
-  chip?: NfcChip;
-  product?: Product;
   message: string;
 }
 
 async function verifyCode(code: string, clientId: string): Promise<VerificationResult> {
   const supabase = await createClient();
 
-  // Look up the chip by public_id
-  const { data: chip, error } = await supabase
+  // Look up the chip by public_id in nfc_chips table
+  const { data: chip } = await supabase
     .from('nfc_chips')
     .select('*')
     .eq('public_id', code)
     .eq('client_id', clientId)
     .single();
 
-  if (error || !chip) {
+  if (chip) {
     return {
-      verified: false,
-      message: 'This code could not be verified. Please check the code and try again.',
+      verified: true,
+      message: 'Authentic product',
     };
   }
 
-  // If chip has a product_id, fetch the product
-  let product: Product | undefined;
-  if (chip.product_id) {
-    const { data: productData } = await supabase
-      .from('products')
-      .select('*')
-      .eq('product_id', chip.product_id)
-      .single();
-
-    if (productData) {
-      product = productData as Product;
-    }
-  }
+  // TODO: Also check label_password table once migrated
 
   return {
-    verified: true,
-    chip: chip as NfcChip,
-    product,
-    message: 'This product is authentic!',
+    verified: false,
+    message: 'Code not found. This product is not valid. Please contact your vendor.',
   };
 }
 
@@ -79,137 +62,155 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
     );
   }
 
-  const { client, branding } = siteConfig;
+  const { client, branding, socialLinks } = siteConfig;
   const backgroundColor = branding?.background_color || '#ffffff';
   const textColor = branding?.text_color || '#000000';
   const logoUrl = branding?.large_logo_url || client.logo_url;
+
+  // Find linktree link
+  const linktreeLink = socialLinks.find(link => link.platform.toLowerCase() === 'linktree');
 
   let result: VerificationResult | null = null;
   if (code) {
     result = await verifyCode(code, client.client_id);
   }
 
+  // If no code provided, redirect-like behavior
+  if (!code) {
+    return (
+      <main className="min-h-screen flex items-center justify-center p-8" style={{ backgroundColor, color: textColor }}>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Please enter a code.</h1>
+          <Link href="/" className="underline">Go back</Link>
+        </div>
+      </main>
+    );
+  }
+
   return (
-    <main
-      className="min-h-screen flex flex-col items-center justify-center p-8"
-      style={{ backgroundColor, color: textColor }}
-    >
-      <div className="w-full max-w-lg flex flex-col items-center gap-8">
-        {logoUrl && (
-          <div className="relative w-48 h-24">
-            <Image
-              src={logoUrl}
-              alt={client.company_name}
-              fill
-              className="object-contain"
-              priority
-            />
-          </div>
-        )}
+    <main className="min-h-screen" style={{ backgroundColor, color: textColor }}>
+      {/* Verification Modal */}
+      <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
+        <div
+          className="w-full max-w-sm rounded-2xl p-6 text-center"
+          style={{ backgroundColor: '#ffdcdd' }}
+        >
+          {result?.verified ? (
+            <>
+              {/* Success Icon */}
+              <div className="mb-4">
+                <Image
+                  src="/images/fryd/verify_success.png"
+                  alt="Verified"
+                  width={85}
+                  height={85}
+                  className="mx-auto"
+                />
+              </div>
 
-        {!code ? (
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">No Code Provided</h1>
-            <p className="opacity-80 mb-6">
-              Please enter a verification code to check your product.
-            </p>
-            <Link
-              href="/"
-              className="inline-block py-3 px-6 rounded-lg font-semibold transition-opacity hover:opacity-90"
-              style={{ backgroundColor: client.primary_color, color: textColor }}
-            >
-              Go to Verification
-            </Link>
-          </div>
-        ) : result ? (
-          <div className="text-center w-full">
-            {result.verified ? (
-              <>
-                <div
-                  className="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: '#22c55e' }}
-                >
-                  <svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={3}
-                      d="M5 13l4 4L19 7"
-                    />
+              {/* Authentic product text */}
+              <h5 className="text-black text-lg font-medium mb-4">
+                Authentic product
+              </h5>
+
+              {/* Small logo */}
+              {logoUrl && (
+                <div className="mb-4">
+                  <Image
+                    src={logoUrl}
+                    alt={client.company_name}
+                    width={122}
+                    height={122}
+                    className="mx-auto rounded-2xl"
+                    unoptimized={logoUrl.endsWith('.gif')}
+                  />
+                </div>
+              )}
+
+              {/* Serial number */}
+              <h1 className="text-black text-lg font-medium">
+                Serial# {code}
+              </h1>
+            </>
+          ) : (
+            <>
+              {/* Failed verification */}
+              <div className="mb-4">
+                <div className="w-20 h-20 mx-auto rounded-full bg-red-500 flex items-center justify-center">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </div>
+              </div>
 
-                <h1 className="text-2xl font-bold mb-2">Authentic Product</h1>
-                <p className="opacity-80 mb-6">{result.message}</p>
+              <h5 className="text-black text-lg font-medium mb-4">
+                Verification Failed
+              </h5>
 
-                {result.product && (
-                  <div className="bg-white/10 rounded-lg p-6 mb-6">
-                    {result.product.image_url && (
-                      <div className="relative w-32 h-32 mx-auto mb-4">
-                        <Image
-                          src={result.product.image_url}
-                          alt={result.product.name}
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                    )}
-                    <h2 className="text-xl font-semibold">{result.product.name}</h2>
-                  </div>
-                )}
+              <p className="text-gray-700 text-sm mb-4">
+                {result?.message}
+              </p>
 
-                <p className="text-sm opacity-60">
-                  Verification Code: {code}
-                </p>
-              </>
-            ) : (
-              <>
-                <div
-                  className="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: '#ef4444' }}
-                >
-                  <svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+              <p className="text-gray-500 text-sm">
+                Code entered: {code}
+              </p>
+            </>
+          )}
+
+          {/* Close/Back button */}
+          <Link
+            href="/"
+            className="inline-block mt-6 text-gray-600 hover:text-gray-800 text-sm underline"
+          >
+            Verify another product
+          </Link>
+        </div>
+      </div>
+
+      {/* Background content (dimmed) */}
+      <div className="container mx-auto px-4 py-8 opacity-50">
+        <div className="flex flex-col items-center justify-center min-h-[80vh]">
+          {logoUrl && (
+            <div className="w-full max-w-xs md:max-w-sm mb-8">
+              <Image
+                src={logoUrl}
+                alt={client.company_name}
+                width={400}
+                height={400}
+                className="w-full h-auto"
+                unoptimized={logoUrl.endsWith('.gif')}
+              />
+            </div>
+          )}
+
+          <div className="w-full max-w-md text-center">
+            <h1 className="text-2xl md:text-3xl font-bold mb-6 uppercase tracking-wide">
+              Verify Your Product
+            </h1>
+
+            {linktreeLink && (
+              <div className="mt-8">
+                <h2 className="text-xl font-bold">
+                  Follow us:
+                  <a
+                    href={`https://linktr.ee/${linktreeLink.handle}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block ml-3 align-middle"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={3}
-                      d="M6 18L18 6M6 6l12 12"
+                    <Image
+                      src="/images/fryd/linktree.png"
+                      alt="Linktree"
+                      width={60}
+                      height={60}
+                      className="inline-block"
                     />
-                  </svg>
-                </div>
-
-                <h1 className="text-2xl font-bold mb-2">Verification Failed</h1>
-                <p className="opacity-80 mb-6">{result.message}</p>
-
-                <p className="text-sm opacity-60 mb-6">
-                  Code entered: {code}
-                </p>
-              </>
+                  </a>
+                </h2>
+              </div>
             )}
-
-            <Link
-              href="/"
-              className="inline-block py-3 px-6 rounded-lg font-semibold transition-opacity hover:opacity-90"
-              style={{ backgroundColor: client.primary_color, color: textColor }}
-            >
-              Verify Another Product
-            </Link>
           </div>
-        ) : null}
-
-        <footer className="mt-12 text-sm opacity-50">
-          &copy; {new Date().getFullYear()} {client.company_name}. All rights reserved.
-        </footer>
+        </div>
       </div>
     </main>
   );

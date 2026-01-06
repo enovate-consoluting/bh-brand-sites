@@ -18,6 +18,9 @@ export interface ClientBranding {
   large_logo_url: string;
   background_color: string;
   text_color: string;
+  button_color: string;
+  button_text_color: string;
+  font_family?: string;
 }
 
 export interface ClientSocialLink {
