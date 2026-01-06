@@ -40,3 +40,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel
+
+# legacy coldfusion code (local reference only)
+/legacy/*
+!/legacy/README.md

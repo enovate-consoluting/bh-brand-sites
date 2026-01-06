@@ -5,7 +5,13 @@
       "Bash(npx create-next-app@latest temp-next --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --turbopack --yes)",
       "Bash(npm install:*)",
       "Bash(git add:*)",
-      "Bash(git commit -m \"$\\(cat <<''EOF''\nInitial setup: Multi-tenant brand verification app\n\n- Next.js 14 with TypeScript and Tailwind CSS\n- Supabase client for server and browser\n- Domain-based middleware for multi-tenancy\n- Homepage with verification form, logo, and social links\n- Verify page with product code validation\n- Dynamic theming based on client branding\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nInitial setup: Multi-tenant brand verification app\n\n- Next.js 14 with TypeScript and Tailwind CSS\n- Supabase client for server and browser\n- Domain-based middleware for multi-tenancy\n- Homepage with verification form, logo, and social links\n- Verify page with product code validation\n- Dynamic theming based on client branding\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(vercel --version:*)",
+      "Bash(vercel:*)",
+      "Bash(printf:*)",
+      "Bash(curl:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
