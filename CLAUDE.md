@@ -10,6 +10,56 @@ A white-label product verification system where brands (Fryd, Wholemelt, Dandy, 
 
 **This single codebase serves 40+ standard verification sites.**
 
+---
+
+## Design Requirements (CRITICAL)
+
+### Mobile-First Design
+**ALL pages MUST be mobile-responsive.** Our users are almost exclusively on mobile devices - they scan NFC chips on products with their phones and land on these verification sites.
+
+**Non-negotiable requirements:**
+- Touch-friendly buttons (minimum 44px tap targets)
+- Readable text without zooming (16px+ base font)
+- Full-width layouts on mobile
+- No horizontal scrolling
+- Fast load times (users are on cellular data)
+- Logos scale properly on all screen sizes
+- Forms are easy to use on mobile keyboards
+
+**Testing checklist:**
+- [ ] Test on iPhone (Safari)
+- [ ] Test on Android (Chrome)
+- [ ] Use browser dev tools mobile emulator
+- [ ] Check both portrait and landscape
+
+**Tailwind breakpoints we use:**
+```
+sm: 640px   // Small tablets
+md: 768px   // Tablets
+lg: 1024px  // Laptops
+xl: 1280px  // Desktops
+```
+
+**Pattern:** Design for mobile first, then add `md:` and `lg:` classes for larger screens.
+
+```tsx
+// GOOD - Mobile first
+<div className="px-4 md:px-8 lg:px-16">
+<h1 className="text-2xl md:text-3xl lg:text-4xl">
+
+// BAD - Desktop first (don't do this)
+<div className="px-16 sm:px-4">
+```
+
+### Clean, Professional UI
+- Minimal, focused design
+- Clear visual hierarchy
+- Consistent spacing
+- Brand colors applied correctly
+- No clutter - verification sites should be simple and trustworthy
+
+---
+
 ## Live URLs
 - **Production:** https://bh-brand-sites.vercel.app
 - **Vercel Dashboard:** https://vercel.com/enovate50/bh-brand-sites
