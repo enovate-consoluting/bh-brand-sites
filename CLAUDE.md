@@ -58,6 +58,9 @@ User scans NFC/enters code → POST to /api/verify → Database lookup → Respo
 | Validation logging | Implemented | All verifications logged to `label_password_validation` |
 | Client isolation | Implemented | Codes only work for their assigned client |
 | Case-insensitive | Implemented | Codes normalized to uppercase |
+| POST-only API | Implemented | GET requests blocked with security message |
+| No URL exposure | Implemented | Results shown in modal, code never in URL |
+| Direct URL blocked | Implemented | /verify pages show security warning |
 
 ### One-Time Code Logic
 
@@ -76,41 +79,44 @@ The `verify_once` feature is controlled per batch in `label_pass_detail`:
 | Screenshot sharing | Low | Can't prevent, but verify_once helps |
 | API abuse | Medium | Rate limiting (TODO) |
 
-### Security Enhancement Options (Future)
+### Security Enhancement Options
 
-**Option 1: POST-only verification (Recommended)**
-- Change API to POST-only (no GET with code in URL)
-- Results page shows generic "Verification complete"
-- Actual result stored in session/cookie
+**Option 1: POST-only verification - IMPLEMENTED**
+- API only accepts POST requests (GET returns security error)
+- Results shown in modal popup, never in URL
+- Code never exposed in browser history or shareable URLs
 - Prevents URL sharing of successful verifications
 
-**Option 2: Time-limited verification tokens**
+**Option 2: Time-limited verification tokens (Future)**
 - Generate unique token per verification attempt
 - Token expires after 60 seconds
 - Prevents replay attacks
 
-**Option 3: CAPTCHA/Rate limiting**
+**Option 3: CAPTCHA/Rate limiting (Future)**
 - Add CAPTCHA before verification
 - Limit verifications per IP/device
 - Prevents automated abuse
 
-**Option 4: Device fingerprinting**
+**Option 4: Device fingerprinting (Future)**
 - Track device info with each verification
 - Flag suspicious patterns (same code, different devices)
 - Analytics for fraud detection
 
 ### API Response Format
 
-The `/api/verify` endpoint returns:
+The `/api/verify` endpoint (POST only):
 ```json
-// Success
-{ "valid": true, "message": "Authentic product", "serial": "CODE123" }
+// Success (POST)
+{ "valid": true, "message": "Authentic product", "serial": "CODE123", "resultToken": "vr_..." }
 
-// Failure
+// Failure (POST)
 { "valid": false, "message": "Code not found..." }
 
-// Already verified (verify_once)
-{ "valid": false, "message": "This code has already been validated." }
+// Already verified - verify_once (POST)
+{ "valid": false, "message": "This code has already been validated.", "alreadyVerified": true }
+
+// GET request (blocked)
+{ "valid": false, "message": "Direct URL verification is not allowed...", "error": "METHOD_NOT_ALLOWED" }
 ```
 
 ---
