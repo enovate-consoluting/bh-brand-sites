@@ -35,6 +35,86 @@ The verify pages (`/verify` and `/preview/[clientId]/verify`) automatically:
 
 ---
 
+## Verification Security Architecture
+
+### How Verification Works (Technical Flow)
+
+```
+User scans NFC/enters code → POST to /api/verify → Database lookup → Response
+                                    ↓
+                           Log to label_password_validation
+```
+
+**Key files:**
+- `src/app/api/verify/route.ts` - API endpoint (serves ALL clients)
+- `src/app/verify/page.tsx` - Server-side verify page
+- `src/app/preview/[clientId]/verify/page.tsx` - Preview verify page
+
+### Current Security Features
+
+| Feature | Status | Description |
+|---------|--------|-------------|
+| One-time codes (verify_once) | Implemented | Codes can be set to work only once |
+| Validation logging | Implemented | All verifications logged to `label_password_validation` |
+| Client isolation | Implemented | Codes only work for their assigned client |
+| Case-insensitive | Implemented | Codes normalized to uppercase |
+
+### One-Time Code Logic
+
+The `verify_once` feature is controlled per batch in `label_pass_detail`:
+- `verify_once = 'Y'` → Code can only be verified ONCE
+- `verify_once_override = 'N'` on individual password → Allows re-verification
+- After first verification, subsequent attempts show: "This code has already been validated"
+
+### Security Threat Model
+
+| Threat | Risk | Mitigation |
+|--------|------|------------|
+| URL sharing (copy verified URL) | Medium | Use POST requests, don't expose results in URL |
+| Code reuse | Low | verify_once feature prevents reuse |
+| Brute force guessing | Low | Codes are long random strings |
+| Screenshot sharing | Low | Can't prevent, but verify_once helps |
+| API abuse | Medium | Rate limiting (TODO) |
+
+### Security Enhancement Options (Future)
+
+**Option 1: POST-only verification (Recommended)**
+- Change API to POST-only (no GET with code in URL)
+- Results page shows generic "Verification complete"
+- Actual result stored in session/cookie
+- Prevents URL sharing of successful verifications
+
+**Option 2: Time-limited verification tokens**
+- Generate unique token per verification attempt
+- Token expires after 60 seconds
+- Prevents replay attacks
+
+**Option 3: CAPTCHA/Rate limiting**
+- Add CAPTCHA before verification
+- Limit verifications per IP/device
+- Prevents automated abuse
+
+**Option 4: Device fingerprinting**
+- Track device info with each verification
+- Flag suspicious patterns (same code, different devices)
+- Analytics for fraud detection
+
+### API Response Format
+
+The `/api/verify` endpoint returns:
+```json
+// Success
+{ "valid": true, "message": "Authentic product", "serial": "CODE123" }
+
+// Failure
+{ "valid": false, "message": "Code not found..." }
+
+// Already verified (verify_once)
+{ "valid": false, "message": "This code has already been validated." }
+```
+
+---
+
 ## Design Requirements (CRITICAL)
 
 ### Mobile-First Design
