@@ -169,29 +169,45 @@ export function DMGHomePage({ siteConfig }: BrandPageProps) {
   // Error state - NOT AUTHENTIC (matches legacy inactive.cfm design)
   if (verifyState === 'error') {
     return (
-      <section className="min-h-screen bg-white flex items-center justify-center px-5 py-10">
-        <div className="max-w-md w-full text-center">
-          {/* Blinking Red X */}
-          <div className="mb-8 animate-pulse">
+      <section className="min-h-screen bg-white">
+        <div className="container mx-auto px-5">
+          {/* Spacer */}
+          <div className="pt-3" />
+
+          {/* Big Red X - Blinking */}
+          <div className="flex justify-center px-[60px]">
             <Image
               src="/images/default/red-x.png"
               alt="Not Authentic"
-              width={120}
-              height={120}
-              className="mx-auto"
+              width={400}
+              height={400}
+              className="animate-blink w-full max-w-[400px]"
             />
           </div>
 
-          {/* Error Message */}
-          <p className="text-[#767171] text-lg leading-relaxed px-4 mb-8">
-            This NFC product is <strong>NOT AUTHENTIC!</strong> This link is unique to one NFC chip that has been compromised and currently has been discontinued. If you continue to see this message, the product is <strong>not authentic!</strong>
-          </p>
+          {/* Error Message - Large Text */}
+          <div className="text-center pt-8 pb-3">
+            <p className="text-[#767171] text-[1.6rem] leading-relaxed">
+              This NFC product is <strong>NOT AUTHENTIC!</strong> This link is unique to one NFC chip that has been compromised and currently has been discontinued. If you continue to see this message, the product is <strong>not authentic!</strong>
+            </p>
+          </div>
 
           {/* Footer */}
-          <p className="text-[#A3A3A3] text-sm mt-16">
-            Powered by Birdhaus
-          </p>
+          <div className="text-center pt-[60px] pb-5">
+            <p className="text-[#A3A3A3] text-[0.8rem] font-medium">
+              Powered by Birdhaus
+            </p>
+          </div>
         </div>
+
+        <style jsx>{`
+          @keyframes blinker {
+            50% { opacity: 0; }
+          }
+          .animate-blink {
+            animation: blinker 1s linear infinite;
+          }
+        `}</style>
       </section>
     );
   }
