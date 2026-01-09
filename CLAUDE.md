@@ -611,7 +611,7 @@ Tables:
 | Brand | Client ID | Domain | Type | Status | Notes |
 |-------|-----------|--------|------|--------|-------|
 | Fryd | 2126 | authenticfryd.com | custom | needs final review | Desktop and Mobile UI tested, no defects |
-| Heaters | 2128 | heatersofficial.com | custom | needs final review | Mobile tested, no defects. Needs verification codes imported |
+| Heaters | 2128 | heatersofficial.com | custom | needs final review | Desktop and Mobile UI tested, no defects |
 | DMG | 2145 | dmgbrandverify.com | custom | needs final review | Mobile tested, no defects. Supports ?product=black-hat and ?product=pink-hat |
 | Green Team | 1990 | verifygreenteam.com | custom | needs final review | Desktop and Mobile UI tested, no defects |
 | Stealthy Air | TBD | stealthyair.com | custom | needs final review | **Client NOT in DB** |
