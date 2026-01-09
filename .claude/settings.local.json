@@ -11,7 +11,14 @@
       "Bash(vercel:*)",
       "Bash(printf:*)",
       "Bash(curl:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npm run build:*)",
+      "Bash(node -e \"\nconst { createClient } = require\\(''@supabase/supabase-js''\\);\nconst supabase = createClient\\(\n  ''https://jbpluczxkpqzqyjtfvas.supabase.co'',\n  ''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpicGx1Y3p4a3BxenF5anRmdmFzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczNjE4Mjk1NywiZXhwIjoyMDUxNzU4OTU3fQ.xv6ADsLK9P0Wz4qUlE5i4EfXkzSwRfVsR3C7SL7vkCk''\n\\);\n\n\\(async \\(\\) => {\n  const { data, error } = await supabase\n    .from\\(''client_domains''\\)\n    .insert\\({ client_id: ''2126'', domain: ''bh-brand-sites.vercel.app'' }\\)\n    .select\\(\\);\n  \n  if \\(error\\) console.log\\(''Error:'', error.message\\);\n  else console.log\\(''Added:'', data\\);\n}\\)\\(\\);\n\")",
+      "Bash(powershell -Command \"Invoke-RestMethod -Uri ''https://jbpluczxkpqzqyjtfvas.supabase.co/rest/v1/client_domains'' -Method Post -Headers @{''apikey''=''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpicGx1Y3p4a3BxenF5anRmdmFzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczNjE4Mjk1NywiZXhwIjoyMDUxNzU4OTU3fQ.xv6ADsLK9P0Wz4qUlE5i4EfXkzSwRfVsR3C7SL7vkCk'';''Authorization''=''Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpicGx1Y3p4a3BxenF5anRmdmFzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczNjE4Mjk1NywiZXhwIjoyMDUxNzU4OTU3fQ.xv6ADsLK9P0Wz4qUlE5i4EfXkzSwRfVsR3C7SL7vkCk'';''Content-Type''=''application/json'';''Prefer''=''return=representation''} -Body ''{\"\"client_id\"\": \"\"2126\"\", \"\"domain\"\": \"\"bh-brand-sites.vercel.app\"\"}''\")",
+      "Bash(npm run dev:*)",
+      "Bash(timeout:*)",
+      "Bash(powershell -Command \"Invoke-RestMethod -Uri ''https://ncblgvjayvuviavhigwp.supabase.co/rest/v1/clients?company_name=ilike.*fryd*&select=client_id,company_name,logo_url'' -Headers @{''apikey''=''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jYmxndmpheXZ1dmlhdmhpZ3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1ODI5NzEsImV4cCI6MjA4MjE1ODk3MX0.Lng_t7109KpNLupL1xwDLlbVtKrYwbcQVt-gu7RYHOs''} | ConvertTo-Json\")",
+      "Bash(powershell -Command \"Invoke-RestMethod -Uri ''https://ncblgvjayvuviavhigwp.supabase.co/rest/v1/client_branding?client_id=eq.2126&select=*'' -Headers @{''apikey''=''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jYmxndmpheXZ1dmlhdmhpZ3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1ODI5NzEsImV4cCI6MjA4MjE1ODk3MX0.Lng_t7109KpNLupL1xwDLlbVtKrYwbcQVt-gu7RYHOs''} | ConvertTo-Json\")"
     ]
   }
 }

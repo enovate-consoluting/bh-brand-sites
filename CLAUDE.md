@@ -1,37 +1,310 @@
 # BH Brand Sites - Project Context
 
 ## Mission
-Multi-tenant brand verification platform to migrate existing ColdFusion sites to Next.js and host all new brand verification websites. Each brand gets their own custom-branded verification site under a unified codebase, reducing maintenance overhead and enabling rapid deployment of new brand sites.
+Multi-tenant brand verification platform to migrate existing ColdFusion sites to Next.js. Each brand gets their own custom-branded verification site under a unified codebase.
+
+**Key Principle:** Most brands share the same code. Only ~10 custom sites need separate projects.
 
 ## What This Project Is
-A white-label product verification system where brands (Dandy, Blinkers, Wholemelt, etc.) each get their own domain with custom branding. Consumers scan NFC chips on products and are directed to the brand's verification site to confirm authenticity. The platform handles domain routing, dynamic theming, and verification logic for 50+ brands from a single Next.js codebase.
+A white-label product verification system where brands (Fryd, Wholemelt, Dandy, etc.) each get their own domain with custom branding. Consumers scan NFC chips on products and are directed to the brand's verification site to confirm authenticity.
+
+**This single codebase serves 40+ standard verification sites.**
 
 ## Live URLs
 - **Production:** https://bh-brand-sites.vercel.app
 - **Vercel Dashboard:** https://vercel.com/enovate50/bh-brand-sites
 - **GitHub:** https://github.com/enovate-consoluting/bh-brand-sites
 
+---
+
+## Getting Started (New Team Members)
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/enovate-consoluting/bh-brand-sites.git
+cd bh-brand-sites
+```
+
+### Step 2: Install Dependencies
+```bash
+npm install
+```
+
+### Step 3: Set Up Environment Variables
+Create `.env.local` file with:
+```
+NEXT_PUBLIC_SUPABASE_URL=https://ncblgvjayvuviavhigwp.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=[ask team lead for key]
+SUPABASE_SERVICE_ROLE_KEY=[ask team lead for key]
+```
+
+### Step 4: Run Locally
+```bash
+npm run dev
+```
+Server runs at http://localhost:3000 (or next available port)
+
+### Step 5: Test Preview Mode
+- Go to: http://localhost:3000/preview
+- See all clients in the database
+- Click any client to preview their site
+
+### Deployments
+**Auto-deploy is enabled.** Just push to GitHub:
+```bash
+git add .
+git commit -m "Your message"
+git push
+```
+Vercel automatically deploys. No manual steps needed.
+
+---
+
 ## Tech Stack
 - **Framework:** Next.js 14 (App Router, Turbopack)
-- **Database:** Supabase (PostgreSQL)
+- **Database:** Supabase (PostgreSQL) + Legacy MySQL (read-only)
 - **Styling:** Tailwind CSS
 - **Language:** TypeScript
 - **Hosting:** Vercel
-- **Auth:** Supabase (for future admin features)
 
-## Database
+---
 
-### Supabase Project
-- **URL:** https://ncblgvjayvuviavhigwp.supabase.co
-- **Tables:**
-  - `clients` - Brand companies (company_name, primary_color, logo_url, contact info, settings)
-  - `client_domains` - Maps domains to clients (domain → client_id)
-  - `client_branding` - Extended branding (large_logo_url, background_color, text_color, button_color, font_family, custom_css)
-  - `client_social_links` - Social media links per client (platform, handle)
-  - `nfc_chips` - Verification codes (public_id, chip_uid, product_id, status, nfc_url)
-  - `verification_logs` - Scan tracking with location data
-  - `rp_registered_products` - Product registrations with user info
-  - `member_rewards` - Points/rewards system (for future use)
+## Project Structure
+
+```
+bh-brand-sites/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx              # Shared homepage (ALL brands use this)
+│   │   ├── verify/page.tsx       # Shared verify page (ALL brands use this)
+│   │   ├── preview/              # Preview mode for local testing
+│   │   │   ├── page.tsx          # List all clients
+│   │   │   └── [clientId]/       # Preview specific client
+│   │   │       ├── page.tsx      # Client homepage preview
+│   │   │       └── verify/page.tsx # Client verify preview
+│   │   ├── layout.tsx
+│   │   └── globals.css
+│   ├── brands/                   # Brand-specific overrides
+│   │   ├── README.md             # Instructions for adding brands
+│   │   ├── index.ts              # Brand registry
+│   │   ├── types.ts              # TypeScript types
+│   │   └── fryd/                 # Fryd's config (first migrated brand)
+│   │       └── index.ts
+│   ├── components/
+│   │   ├── VerifyForm.tsx
+│   │   └── SocialLinks.tsx
+│   ├── lib/
+│   │   ├── supabase/
+│   │   │   ├── client.ts
+│   │   │   └── server.ts
+│   │   ├── get-site-config.ts      # Fetches config by domain
+│   │   └── get-site-config-by-id.ts # Fetches config by client ID (preview)
+│   ├── middleware.ts
+│   └── types/
+│       └── database.ts
+├── public/
+│   └── images/
+│       ├── default/              # Default icons
+│       └── [brand-slug]/         # Brand-specific assets
+├── legacy/                       # Legacy ColdFusion code (LOCAL ONLY - gitignored)
+│   └── [brand-name]/
+└── CLAUDE.md                     # This file
+```
+
+---
+
+## Preview Mode (Local Testing)
+
+Preview mode lets you test any brand without DNS changes.
+
+| URL | What It Shows |
+|-----|---------------|
+| `/preview` | List of ALL clients (click to preview) |
+| `/preview/2126` | Fryd's homepage |
+| `/preview/2126/verify?code=XXX` | Fryd's verify page |
+| `/preview/[clientId]` | Any client by ID |
+
+**Brands with branding configured show green. Others show gray.**
+
+---
+
+## Analyst Workflow: Migrating a Brand Site
+
+### Overview
+1. Download legacy code to `legacy/[brand-name]/`
+2. Ask Claude to review it
+3. Claude determines: **STANDARD** or **CUSTOM**
+4. If standard → Claude adds to database, gives preview URL
+5. If custom → Flag for separate project
+
+### Step-by-Step
+
+#### 1. Download Legacy Code
+```bash
+mkdir legacy/[brand-name]
+# Download ColdFusion files from production server
+# Place all files in legacy/[brand-name]/
+```
+
+#### 2. Tell Claude to Review
+Say to Claude:
+> "I've put legacy code for [Brand Name] in `legacy/[brand-name]/`. Review it and tell me if it's a standard verification site or a custom site."
+
+#### 3. Claude Will Analyze and Report
+
+**Claude will look for:**
+- What pages exist (homepage, verify, registration, rewards, etc.)
+- What database tables it queries
+- Any custom features beyond basic verification
+- Branding info (colors, logos)
+
+**Claude will respond with one of:**
+
+**STANDARD SITE:**
+> "This is a STANDARD verification site. It has:
+> - Homepage with verification form
+> - Verify page that checks codes
+> - No custom features
+>
+> I'll add it to the database. What's the client ID?"
+
+**CUSTOM SITE:**
+> "This is a CUSTOM site. It has features beyond standard verification:
+> - [Feature 1]
+> - [Feature 2]
+>
+> Recommendation: This should be a separate Vercel project."
+
+#### 4. For Standard Sites - Claude Adds to Database
+
+Claude will:
+1. Add domain to `client_domains` table
+2. Add branding to `client_branding` table
+3. Register brand assets if needed
+4. Give you preview URL: `http://localhost:3000/preview/[clientId]`
+
+#### 5. Test and Verify
+- Open the preview URL
+- Check logo, colors, layout
+- Test verify form
+- If good → commit and push
+
+---
+
+## How Claude Identifies Standard vs Custom Sites
+
+### STANDARD Site Characteristics
+- Homepage with logo and verification form
+- Verify page that checks code against database
+- Maybe social links (Instagram, Linktree)
+- Simple branding (colors, logo)
+- **No user accounts, no registration, no rewards**
+
+### CUSTOM Site Characteristics
+Look for ANY of these:
+- User registration/login
+- Member accounts
+- Points/rewards system
+- Product registration (user enters info, uploads photos)
+- Multiple product pages
+- Shopping cart / e-commerce
+- Custom API integrations
+- Complex multi-step flows
+- Admin dashboard
+
+**If you see these features → CUSTOM site → Separate project**
+
+### Files That Indicate Custom Site
+```
+# These file patterns suggest CUSTOM:
+- login.cfm, register.cfm, signup.cfm
+- account.cfm, profile.cfm, dashboard.cfm
+- rewards.cfm, points.cfm, redeem.cfm
+- cart.cfm, checkout.cfm, order.cfm
+- admin/, manage/, cms/
+- Multiple product pages
+- Complex folder structures
+```
+
+### Files That Indicate Standard Site
+```
+# These file patterns suggest STANDARD:
+- index.cfm (homepage only)
+- verify.cfm, validate.cfm, check.cfm
+- Simple flat structure
+- Just a few files total
+```
+
+---
+
+## Adding a New Brand (Standard Site)
+
+### What You Need
+- Client ID (from database or legacy system)
+- Domain name
+- Logo URL
+- Brand colors (background, text, button)
+
+### Database Entries
+
+**Add to `client_domains`:**
+```sql
+INSERT INTO client_domains (client_id, domain)
+VALUES ('1234', 'verifybrand.com');
+```
+
+**Add to `client_branding`:**
+```sql
+INSERT INTO client_branding (
+  client_id,
+  large_logo_url,
+  background_color,
+  text_color,
+  button_color,
+  button_text_color
+)
+VALUES (
+  '1234',
+  '/images/brand/logo.png',
+  '#000000',
+  '#ffffff',
+  '#ff0000',
+  '#ffffff'
+);
+```
+
+### Brand Assets (Optional)
+
+If brand has custom icons:
+1. Create folder: `public/images/[brand-slug]/`
+2. Add: `verify_success.png`, `linktree.png`, etc.
+3. Create: `src/brands/[brand-slug]/index.ts`
+4. Register in: `src/brands/index.ts`
+
+**If no custom assets:** Skip this. Brand uses default icons.
+
+---
+
+## Commands Reference
+
+```bash
+npm run dev      # Start local dev server
+npm run build    # Build for production
+npm run lint     # Run ESLint
+git push         # Deploy to Vercel (auto)
+```
+
+---
+
+## Database (Supabase)
+
+### Tables
+- `clients` - Brand companies (company_name, primary_color, logo_url)
+- `client_domains` - Maps domains to clients (domain → client_id)
+- `client_branding` - Extended branding (colors, logos, fonts)
+- `client_social_links` - Social media links per client
+- `nfc_chips` - Verification codes (public_id, client_id, status)
+- `verification_logs` - Scan tracking
 
 ### Environment Variables
 ```
@@ -40,228 +313,115 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 ```
 
-## Key Features
+---
 
-### Core (MVP)
-- [x] Multi-tenant domain detection middleware
-- [x] Dynamic branding per client (colors, logos)
-- [x] Homepage with verification form
-- [x] Verify page - checks NFC chip codes against database
-- [x] Social links display
-- [ ] Client domain mapping (table exists, needs data)
+## Legacy Database (Read-Only)
 
-### Phase 2
-- [ ] Product registration flow
-- [ ] Image upload for registrations
-- [ ] Email notifications
+### Critical Rule: DO NOT MIGRATE DATA
+The old database has other systems depending on it. We:
+1. **Query the existing database** - Connect and read from it
+2. **Write to both if needed** - Old DB + new DB
+3. **Never duplicate IDs** - Keep IDs in sync with legacy
 
-### Phase 3
-- [ ] Rewards/points system
-- [ ] Member accounts
-- [ ] Admin dashboard per brand
-
-## Current State (January 6, 2026)
-
-- ✅ Next.js 14 project initialized with TypeScript + Tailwind
-- ✅ Supabase client configured (server + browser)
-- ✅ Middleware detects domain and loads client config
-- ✅ Homepage with verify form, logo, social links
-- ✅ Verify page checks codes against nfc_chips table
-- ✅ Deployed to Vercel with env vars
-- ✅ GitHub repo connected for auto-deploy
-- ⚠️ No domains mapped yet in client_domains table
-- ⚠️ Most clients missing branding data (logos, colors)
-
-## Project Structure
+### Connection (TBD)
 ```
-src/
-├── app/
-│   ├── page.tsx              # Homepage with verify form
-│   ├── verify/page.tsx       # Verification result page
-│   ├── layout.tsx            # Root layout
-│   └── globals.css           # Global styles
-├── components/
-│   ├── VerifyForm.tsx        # Code input form
-│   └── SocialLinks.tsx       # Social media icons
-├── lib/
-│   ├── supabase/
-│   │   ├── client.ts         # Browser Supabase client
-│   │   └── server.ts         # Server Supabase client
-│   └── get-site-config.ts    # Fetches client config by domain
-├── middleware.ts             # Domain detection
-└── types/
-    └── database.ts           # TypeScript types
-```
-
-## Quick Reference
-
-### Commands
-```bash
-npm run dev      # Start development server (localhost:3000)
-npm run build    # Build for production
-npm run lint     # Run ESLint
-vercel --prod    # Deploy to production
-```
-
-### Adding a New Brand Site
-1. Ensure client exists in `clients` table
-2. Add domain mapping to `client_domains` (domain, client_id)
-3. Add branding to `client_branding` (logo, colors)
-4. Add social links to `client_social_links` (optional)
-5. Configure domain in Vercel + DNS
-
-### Database Access (CLI)
-```bash
-# Example: Get all clients
-curl -s "https://ncblgvjayvuviavhigwp.supabase.co/rest/v1/clients?select=*" \
-  -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
-  -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY"
+Host: [pending from sys admin]
+Database: [pending]
+Tables:
+  - label_password - verification codes
+  - label_password_detail - code settings
+  - label_password_validation - verification log
+  - client - company info
 ```
 
 ---
 
-## Migration Workflow
+## Current State (January 9, 2026)
 
-### Philosophy: Clean As You Go
-**DO NOT blindly copy old database structures or code patterns.** The legacy ColdFusion codebase has accumulated technical debt. This migration is an opportunity to:
+### Completed
+- ✅ Next.js 14 project with TypeScript + Tailwind
+- ✅ Multi-tenant domain detection middleware
+- ✅ Dynamic branding per client
+- ✅ Homepage with verification form
+- ✅ Verify page with NFC chip validation
+- ✅ Brand override system (`src/brands/`)
+- ✅ Preview mode for local testing (`/preview`)
+- ✅ Fryd configured as first brand
+- ✅ Default assets for brands without custom icons
+- ✅ Deployed to Vercel with auto-deploy
 
-1. **Normalize data** - If old tables have redundant columns, ask before recreating them
-2. **Ask questions** - When something looks messy, stop and clarify before implementing
-3. **Document decisions** - Note why we structured things differently than the legacy system
-4. **Keep it simple** - Only build what's needed for the current site, not "just in case" features
+### In Progress
+- ⏳ Legacy database connection (sys admin getting credentials)
+- ⏳ Data migration (clients, NFC chips, labels)
+- ⏳ First brand migration (Fryd - authenticfryd.com)
 
-### Folder Structure
-```
-bh-brand-sites/
-├── src/                    # Next.js application code (shared by all brands)
-├── legacy/                 # Legacy ColdFusion code (LOCAL ONLY - gitignored)
-│   ├── dandy/              # Dandy's old CF files
-│   ├── blinkers/           # Blinkers' old CF files
-│   └── [brand-name]/       # Each brand's legacy code
-├── CLAUDE.md               # This file - project context
-└── ...
-```
+### Pending
+- [ ] Wire up legacy database for verification
+- [ ] Map authenticfryd.com domain in production
+- [ ] Test end-to-end verification flow
+- [ ] Migrate remaining standard sites
 
-### Step-by-Step: Migrating a Brand Site
+---
 
-#### 1. Download Legacy Code
-```bash
-# Create folder for the brand
-mkdir legacy/[brand-name]
+## Migration Checklist
 
-# Download ColdFusion files from production server
-# (Use FTP, SCP, or whatever access you have)
-# Place all files in legacy/[brand-name]/
-```
+| Brand | Client ID | Domain | Type | Status |
+|-------|-----------|--------|------|--------|
+| Fryd | 2126 | authenticfryd.com | standard | in progress |
+| (add more as migrated) | | | | |
 
-#### 2. Review Legacy Code with Claude
-Tell Claude:
-> "I've downloaded the legacy code for [Brand Name] into `legacy/[brand-name]/`. Let's review it together. Walk me through what this site does and what we need to migrate."
+---
 
-Claude will:
-- Read through the legacy files
-- Identify the features and flows
-- Ask clarifying questions about business logic
-- Propose a clean implementation
+## Troubleshooting
 
-#### 3. Check/Update Database
-Before writing code, verify the data:
-- Does the client exist in `clients` table?
-- Is there branding in `client_branding`?
-- Are there NFC chips in `nfc_chips` for this client?
-- What's in the old database that we need to migrate?
+### "Site Not Found" on localhost
+The main site (`/`) uses domain detection. Use preview mode instead:
+- http://localhost:3000/preview/[clientId]
 
-**If old database has messy structure:**
-- Claude will ask: "The old table has X columns, but Y and Z seem redundant. Should we normalize this?"
-- You decide - don't just copy the mess
+### Client not showing in preview list
+- Check if client exists in `clients` table
+- Check Supabase connection (env vars)
 
-#### 4. Implement the Site
-- Add domain to `client_domains`
-- Add/update branding in `client_branding`
-- Add any new features needed (most sites use the shared codebase)
-- If custom features needed, discuss architecture first
+### Branding not loading
+- Check `client_branding` table has entry for client_id
+- Check logo URL is accessible
 
-#### 5. Test & Deploy
-```bash
-npm run dev                 # Test locally
-git add . && git commit     # Commit changes
-git push                    # Auto-deploys to Vercel
-```
-
-#### 6. DNS & Go Live
-- Add custom domain in Vercel dashboard
-- Update DNS to point to Vercel
-- Verify site loads with correct branding
-
-### Questions Claude Should Ask During Migration
-
-1. **Data Structure:**
-   - "The old database has [X]. Do we need this, or can we simplify?"
-   - "This column seems unused. Should I skip it?"
-
-2. **Features:**
-   - "The old site has [feature]. Is this still needed?"
-   - "This logic seems complex. Can you explain the business reason?"
-
-3. **Branding:**
-   - "I see these colors in the old CSS. Are these current brand colors?"
-   - "The old site has [X] pages. Which are essential for launch?"
-
-4. **Edge Cases:**
-   - "What should happen when [X]?"
-   - "The old code handles [Y] this way - is that correct behavior?"
-
-### For Team Members Using This Workflow
-
-When starting work on a new brand migration:
-
-1. **Read this CLAUDE.md first** - Understand the project structure
-2. **Download legacy code** to `legacy/[brand-name]/`
-3. **Tell Claude:** "Let's migrate [Brand Name]. I've put the legacy code in `legacy/[brand-name]/`. Review it and ask me questions before we start coding."
-4. **Answer Claude's questions** - Don't let it guess
-5. **Review Claude's plan** before implementation
-6. **Test thoroughly** before deploying
-
-### Red Flags to Watch For
-
-- 🚩 Claude creating new database tables without asking
-- 🚩 Claude copying old column names that don't make sense
-- 🚩 Implementing features that seem unused
-- 🚩 Complex logic without clear business justification
-
-**When in doubt, STOP and ASK.**
+### Changes not deploying
+- Check GitHub push succeeded
+- Check Vercel dashboard for build errors
 
 ---
 
 ## Session Log
 
+### January 9, 2026
+**Goal:** Set up brand override structure and preview mode
+
+**What was done:**
+- Created `src/brands/` folder structure
+- Added brand registry and asset loader
+- Configured Fryd as first brand
+- Created default verify icons (SVG)
+- Built preview mode (`/preview`, `/preview/[clientId]`)
+- Updated pages to use dynamic brand assets
+- Removed hardcoded references
+- Updated CLAUDE.md with full analyst workflow
+
+**Key files:**
+- `src/brands/index.ts` - Brand registry
+- `src/app/preview/` - Preview mode routes
+- `src/lib/get-site-config-by-id.ts` - Config loader by ID
+
 ### January 6, 2026
 **Goal:** Initialize multi-tenant brand verification platform
 
 **What was done:**
-- Created Next.js 14 project with TypeScript + Tailwind
-- Set up Supabase client (server + browser)
-- Created middleware for domain-based multi-tenancy
-- Built homepage with verification form, logo, social links
-- Built /verify page with NFC chip code validation
-- Pushed to GitHub and deployed to Vercel
-- Configured Supabase environment variables
-- Verified database access (50+ clients already exist)
-
-**Key files created:**
-- `src/middleware.ts` - Domain detection and client routing
-- `src/lib/get-site-config.ts` - Fetches client config from Supabase
-- `src/app/page.tsx` - Dynamic homepage
-- `src/app/verify/page.tsx` - Verification result page
-- `src/components/VerifyForm.tsx` - Code input form
-- `src/components/SocialLinks.tsx` - Social media icons
-- `src/types/database.ts` - TypeScript interfaces
-
-**Still needs work:**
-- Map first client domain in `client_domains`
-- Add branding data for first client
-- Test end-to-end verification flow
+- Created Next.js 14 project
+- Set up Supabase client
+- Created middleware for domain detection
+- Built homepage and verify pages
+- Deployed to Vercel
 
 ---
 
-*Last updated: January 6, 2026*
+*Last updated: January 9, 2026*

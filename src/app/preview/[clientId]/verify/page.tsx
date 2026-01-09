@@ -1,12 +1,12 @@
-import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getSiteConfig } from '@/lib/get-site-config';
+import { getSiteConfigById } from '@/lib/get-site-config-by-id';
 import { getClientSlug } from '@/types/database';
 import { getBrandAssets } from '@/brands';
 import { createClient } from '@/lib/supabase/server';
 
-interface VerifyPageProps {
+interface PreviewVerifyPageProps {
+  params: Promise<{ clientId: string }>;
   searchParams: Promise<{ code?: string }>;
 }
 
@@ -39,24 +39,23 @@ async function verifyCode(code: string, clientId: string): Promise<VerificationR
   };
 }
 
-export default async function VerifyPage({ searchParams }: VerifyPageProps) {
-  const params = await searchParams;
-  const code = params.code || '';
+export default async function PreviewVerifyPage({ params, searchParams }: PreviewVerifyPageProps) {
+  const { clientId } = await params;
+  const { code = '' } = await searchParams;
 
-  const headersList = await headers();
-  const host = headersList.get('host') || 'localhost';
-  const domain = host.split(':')[0];
-
-  const siteConfig = await getSiteConfig(domain);
+  const siteConfig = await getSiteConfigById(clientId);
 
   if (!siteConfig) {
     return (
-      <main className="min-h-screen flex items-center justify-center p-8">
+      <main className="min-h-screen flex items-center justify-center p-8 bg-gray-100">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Site Not Found</h1>
-          <p className="text-gray-600">
-            This domain is not configured. Please contact support.
+          <h1 className="text-2xl font-bold mb-4">Client Not Found</h1>
+          <p className="text-gray-600 mb-4">
+            No client with ID: {clientId}
           </p>
+          <Link href="/preview" className="text-blue-600 underline">
+            View all clients
+          </Link>
         </div>
       </main>
     );
@@ -75,16 +74,19 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
 
   let result: VerificationResult | null = null;
   if (code) {
-    result = await verifyCode(code, client.client_id);
+    result = await verifyCode(code, clientId);
   }
 
-  // If no code provided, redirect-like behavior
+  // If no code provided
   if (!code) {
     return (
       <main className="min-h-screen flex items-center justify-center p-8" style={{ backgroundColor, color: textColor }}>
+        <div className="bg-yellow-400 text-black text-center py-2 text-sm font-medium fixed top-0 left-0 right-0">
+          PREVIEW MODE - {client.company_name} (ID: {clientId})
+        </div>
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Please enter a code.</h1>
-          <Link href="/" className="underline">Go back</Link>
+          <Link href={`/preview/${clientId}`} className="underline">Go back</Link>
         </div>
       </main>
     );
@@ -92,8 +94,15 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
 
   return (
     <main className="min-h-screen" style={{ backgroundColor, color: textColor }}>
+      {/* Preview Banner */}
+      <div className="bg-yellow-400 text-black text-center py-2 text-sm font-medium fixed top-0 left-0 right-0 z-[100]">
+        PREVIEW MODE - {client.company_name} (ID: {clientId})
+        {' | '}
+        <Link href="/preview" className="underline">View All Clients</Link>
+      </div>
+
       {/* Verification Modal */}
-      <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
+      <div className="fixed inset-0 flex items-center justify-center p-4 z-50 pt-12">
         <div
           className="w-full max-w-sm rounded-2xl p-6 text-center"
           style={{ backgroundColor: '#fafafa' }}
@@ -164,7 +173,7 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
 
           {/* Close/Back button */}
           <Link
-            href="/"
+            href={`/preview/${clientId}`}
             className="inline-block mt-6 text-gray-600 hover:text-gray-800 text-sm underline"
           >
             Verify another product
@@ -173,7 +182,7 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
       </div>
 
       {/* Background content (dimmed) */}
-      <div className="container mx-auto px-4 py-8 opacity-50">
+      <div className="container mx-auto px-4 py-8 opacity-50 pt-16">
         <div className="flex flex-col items-center justify-center min-h-[80vh]">
           {logoUrl && (
             <div className="w-full max-w-xs md:max-w-sm mb-8">

@@ -6,11 +6,14 @@ import { useRouter } from 'next/navigation';
 interface VerifyFormProps {
   buttonColor?: string;
   buttonTextColor?: string;
+  /** If set, redirects to preview verify route instead of main verify */
+  previewClientId?: string;
 }
 
 export function VerifyForm({
   buttonColor = '#000000',
-  buttonTextColor = '#ffffff'
+  buttonTextColor = '#ffffff',
+  previewClientId,
 }: VerifyFormProps) {
   const [code, setCode] = useState('');
   const router = useRouter();
@@ -18,7 +21,12 @@ export function VerifyForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (code.trim()) {
-      router.push(`/verify?code=${encodeURIComponent(code.trim())}`);
+      const encodedCode = encodeURIComponent(code.trim());
+      if (previewClientId) {
+        router.push(`/preview/${previewClientId}/verify?code=${encodedCode}`);
+      } else {
+        router.push(`/verify?code=${encodedCode}`);
+      }
     }
   };
 

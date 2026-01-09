@@ -1,25 +1,29 @@
-import { headers } from 'next/headers';
 import Image from 'next/image';
-import { getSiteConfig } from '@/lib/get-site-config';
+import Link from 'next/link';
+import { getSiteConfigById } from '@/lib/get-site-config-by-id';
 import { getClientSlug } from '@/types/database';
 import { getBrandAssets } from '@/brands';
 import { VerifyForm } from '@/components/VerifyForm';
 
-export default async function HomePage() {
-  const headersList = await headers();
-  const host = headersList.get('host') || 'localhost';
-  const domain = host.split(':')[0];
+interface PreviewPageProps {
+  params: Promise<{ clientId: string }>;
+}
 
-  const siteConfig = await getSiteConfig(domain);
+export default async function PreviewHomePage({ params }: PreviewPageProps) {
+  const { clientId } = await params;
+  const siteConfig = await getSiteConfigById(clientId);
 
   if (!siteConfig) {
     return (
-      <main className="min-h-screen flex items-center justify-center p-8">
+      <main className="min-h-screen flex items-center justify-center p-8 bg-gray-100">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Site Not Found</h1>
-          <p className="text-gray-600">
-            This domain is not configured. Please contact support.
+          <h1 className="text-2xl font-bold mb-4">Client Not Found</h1>
+          <p className="text-gray-600 mb-4">
+            No client with ID: {clientId}
           </p>
+          <Link href="/preview" className="text-blue-600 underline">
+            View all clients
+          </Link>
         </div>
       </main>
     );
@@ -43,6 +47,13 @@ export default async function HomePage() {
       className="min-h-screen"
       style={{ backgroundColor, color: textColor }}
     >
+      {/* Preview Banner */}
+      <div className="bg-yellow-400 text-black text-center py-2 text-sm font-medium">
+        PREVIEW MODE - {client.company_name} (ID: {clientId})
+        {' | '}
+        <Link href="/preview" className="underline">View All Clients</Link>
+      </div>
+
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col items-center justify-center min-h-[80vh]">
           {/* Logo */}
@@ -69,6 +80,7 @@ export default async function HomePage() {
             <VerifyForm
               buttonColor={buttonColor}
               buttonTextColor={buttonTextColor}
+              previewClientId={clientId}
             />
 
             {/* Follow Us */}

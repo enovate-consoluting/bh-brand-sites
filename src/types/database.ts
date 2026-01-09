@@ -4,6 +4,22 @@ export interface Client {
   primary_color: string;
   logo_url: string;
   created_at?: string;
+  /** Brand slug for folder lookups (e.g., "fryd", "wholemelt") */
+  slug?: string;
+}
+
+/**
+ * Derive a slug from company name if not explicitly set
+ * "Fryd Extracts" -> "fryd"
+ * "Whole Melt" -> "wholemelt"
+ */
+export function getClientSlug(client: Client): string {
+  if (client.slug) return client.slug;
+  // Take first word, lowercase, remove non-alphanumeric
+  return client.company_name
+    .split(' ')[0]
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '');
 }
 
 export interface ClientDomain {
