@@ -189,7 +189,7 @@ export function DMGHomePage({ siteConfig }: BrandPageProps) {
 
           {/* Footer */}
           <p className="text-[#A3A3A3] text-sm mt-16">
-            Powered and designed by Scanacart LLC.
+            Powered by Birdhaus
           </p>
         </div>
       </section>
