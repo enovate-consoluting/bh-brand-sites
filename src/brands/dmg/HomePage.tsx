@@ -59,7 +59,7 @@ export function DMGHomePage({ siteConfig }: BrandPageProps) {
 
     async function verifyNFC() {
       try {
-        const response = await fetch(`/api/verify/nfc?id=${encodeURIComponent(encryptedId)}`);
+        const response = await fetch(`/api/verify/nfc?id=${encodeURIComponent(encryptedId!)}`);
         const data: NFCResult = await response.json();
 
         if (data.valid) {
