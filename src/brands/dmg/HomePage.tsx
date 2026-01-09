@@ -1,8 +1,15 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import type { BrandPageProps } from '../types';
 import './dmg.css';
+
+// Product variants
+const products: Record<string, { image: string; alt: string }> = {
+  'black-hat': { image: 'Black Hat.png', alt: 'Black Hat' },
+  'pink-hat': { image: 'Pink Hat.png', alt: 'Pink Hat' },
+};
 
 /**
  * DMG Hats / Lovers Only Homepage
@@ -10,15 +17,23 @@ import './dmg.css';
  * NFC tap-to-verify page - no code input needed.
  * User taps NFC tag on product → lands here → sees "Authentic"
  *
+ * URL params:
+ * - ?product=black-hat (default)
+ * - ?product=pink-hat
+ *
  * Features:
  * - Pink romantic theme with hearts overlay
  * - "Lovers Only" title
- * - Hat product image (Black Hat default)
+ * - Hat product image based on URL param
  * - Scan counter display
  * - Authentic badge
  * - Brand logo
  */
 export function DMGHomePage({ siteConfig }: BrandPageProps) {
+  const searchParams = useSearchParams();
+  const productParam = searchParams.get('product') || 'black-hat';
+  const product = products[productParam] || products['black-hat'];
+
   // TODO: Get scan count from URL params or API when NFC integration is complete
   const scanCount = 1;
 
@@ -55,8 +70,8 @@ export function DMGHomePage({ siteConfig }: BrandPageProps) {
           {/* Hat Product Image */}
           <div className="dmg-product">
             <Image
-              src="/images/dmg/Black Hat.png"
-              alt="DMG Hat"
+              src={`/images/dmg/${product.image}`}
+              alt={product.alt}
               width={290}
               height={290}
               className="w-full h-auto"
@@ -66,7 +81,7 @@ export function DMGHomePage({ siteConfig }: BrandPageProps) {
           {/* Scan Counter */}
           <div className="dmg-scan-counter">
             <h4>
-              Scan Counter: <span>{String(scanCount).padStart(2, '0')}</span>
+              Scan Counter: <span>{scanCount}</span>
             </h4>
           </div>
 

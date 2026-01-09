@@ -1,5 +1,13 @@
 /* DMG Hats / Lovers Only Brand Styles */
 
+@font-face {
+  font-family: 'Alex Brush';
+  src: url('/fonts/dmg/AlexBrush-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 .dmg-wrapper {
   min-height: 100vh;
   display: flex;
@@ -104,7 +112,7 @@
 
 .dmg-authentic img {
   width: 100%;
-  max-width: 260px;
+  max-width: 320px;
   height: auto;
 }
 
@@ -169,7 +177,7 @@
   }
 
   .dmg-authentic img {
-    max-width: 210px;
+    max-width: 260px;
   }
 
   .dmg-product img {
@@ -187,7 +195,7 @@
   }
 
   .dmg-authentic img {
-    max-width: 160px;
+    max-width: 200px;
   }
 
   .dmg-verify-box {
