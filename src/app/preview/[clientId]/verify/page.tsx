@@ -67,7 +67,12 @@ export default async function PreviewVerifyPage({ params, searchParams }: Previe
 
   const backgroundColor = branding?.background_color || '#ffffff';
   const textColor = branding?.text_color || '#000000';
-  const logoUrl = branding?.large_logo_url || client.logo_url;
+
+  // Validate logo URL - must be absolute URL or start with /
+  const rawLogoUrl = branding?.large_logo_url || client.logo_url;
+  const logoUrl = rawLogoUrl && (rawLogoUrl.startsWith('http') || rawLogoUrl.startsWith('/'))
+    ? rawLogoUrl
+    : null;
 
   // Find linktree link
   const linktreeLink = socialLinks.find(link => link.platform.toLowerCase() === 'linktree');
@@ -134,7 +139,7 @@ export default async function PreviewVerifyPage({ params, searchParams }: Previe
                     width={122}
                     height={122}
                     className="mx-auto rounded-2xl"
-                    unoptimized={logoUrl.endsWith('.gif')}
+                    unoptimized={logoUrl?.endsWith('.gif')}
                   />
                 </div>
               )}
@@ -192,7 +197,7 @@ export default async function PreviewVerifyPage({ params, searchParams }: Previe
                 width={400}
                 height={400}
                 className="w-full h-auto"
-                unoptimized={logoUrl.endsWith('.gif')}
+                unoptimized={logoUrl?.endsWith('.gif')}
               />
             </div>
           )}

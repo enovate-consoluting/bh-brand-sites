@@ -33,7 +33,12 @@ export default async function HomePage() {
   const textColor = branding?.text_color || '#000000';
   const buttonColor = branding?.button_color || '#000000';
   const buttonTextColor = branding?.button_text_color || '#ffffff';
-  const logoUrl = branding?.large_logo_url || client.logo_url;
+
+  // Validate logo URL - must be absolute URL or start with /
+  const rawLogoUrl = branding?.large_logo_url || client.logo_url;
+  const logoUrl = rawLogoUrl && (rawLogoUrl.startsWith('http') || rawLogoUrl.startsWith('/'))
+    ? rawLogoUrl
+    : null;
 
   // Find linktree link if exists
   const linktreeLink = socialLinks.find(link => link.platform.toLowerCase() === 'linktree');
@@ -55,7 +60,7 @@ export default async function HomePage() {
                 height={400}
                 className="w-full h-auto"
                 priority
-                unoptimized={logoUrl.endsWith('.gif')}
+                unoptimized={logoUrl?.endsWith('.gif')}
               />
             </div>
           )}

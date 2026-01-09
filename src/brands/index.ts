@@ -17,6 +17,7 @@ const brandRegistry: Record<string, BrandOverride> = {
   heaters: heatersBrand,
   dmg: dmgBrand,
   greenteam: greenteamBrand,
+  green: greenteamBrand, // Alias: "Green Team" -> "green" (first word only)
   stealthyair: stealthyairBrand,
   waxxbrandz: waxxbrandzBrand,
 };

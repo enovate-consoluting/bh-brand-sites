@@ -1,5 +1,14 @@
 /* Green Team Brand Styles */
 
+/* Custom Posey font */
+@font-face {
+  font-family: 'Posey';
+  src: url('/fonts/greenteam/Posey-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 .greenteam-wrapper {
   background-color: #0a0a0a;
   color: white;
@@ -7,18 +16,20 @@
   min-height: 100vh;
 }
 
-/* Brand font class */
+/* Brand font class - Posey */
 .brand-font {
-  font-family: 'Inter', sans-serif;
-  font-weight: 700;
+  font-family: 'Posey', 'Inter', sans-serif;
+  font-weight: 400;
   letter-spacing: 0.05em;
 }
 
-/* Video container */
+/* Video container - fills parent wrapper */
 .greenteam-video-container {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: calc(100vh - 5rem);
+  height: 100%;
   overflow: hidden;
 }
 
@@ -26,8 +37,10 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 100vw;
+  width: 177.77vh; /* 16:9 aspect ratio */
   height: 100vh;
+  min-width: 100%;
+  min-height: 56.25vw; /* 16:9 aspect ratio */
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
@@ -71,8 +84,22 @@
 }
 
 /* Liquid gradient animation */
+@keyframes liquidMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .greenteam-liquid-gradient {
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  background: linear-gradient(-45deg, #0f172a, #1e293b, #064e3b, #065f46);
+  background-size: 400% 400%;
+  animation: liquidMove 15s ease infinite;
   position: relative;
 }
 
