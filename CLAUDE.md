@@ -526,8 +526,8 @@ Tables:
 |-------|-----------|--------|------|--------|-------|
 | Fryd | 2126 | authenticfryd.com | custom | in progress | Has age gate |
 | Heaters | 2128 | heatersofficial.com | custom | needs final review | Custom homepage |
-| DMG | 2145 | dmgbrandverify.com | custom | needs final review | Hat verification |
-| Green Team | 1990 | verifygreenteam.com | custom | in progress | Enhanced homepage, custom font |
+| DMG | 2145 | dmgbrandverify.com | custom | needs final review | Mobile tested, no defects. Supports ?product=black-hat and ?product=pink-hat |
+| Green Team | 1990 | verifygreenteam.com | custom | needs final review | Mobile tested, no defects |
 | Stealthy Air | TBD | stealthyair.com | custom | needs final review | **Client NOT in DB** |
 | Waxx Brandz | 1852 | waxxbrandz.com | custom | needs final review | **Duplicate client: 2075** |
 
@@ -574,6 +574,11 @@ The main site (`/`) uses domain detection. Use preview mode instead:
 - Created verify API route (`src/app/api/verify/route.ts`)
 - Updated preview pages for better brand support
 - Deployed to production (commit `5582e2a`)
+- Tested Green Team mobile responsiveness - verified no defects
+- DMG Hats: Added AlexBrush custom font
+- DMG Hats: Added product variants via URL param (?product=black-hat, ?product=pink-hat)
+- DMG Hats: Fixed image centering on mobile
+- DMG Hats: Mobile tested - no defects
 
 **Key files created/modified:**
 - `src/brands/greenteam/HomePage.tsx` - Major enhancements (947+ lines)
