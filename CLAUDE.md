@@ -58,6 +58,63 @@ xl: 1280px  // Desktops
 - Brand colors applied correctly
 - No clutter - verification sites should be simple and trustworthy
 
+### Favicon Requirements
+Every brand site needs proper favicons for browser tabs and home screen icons.
+
+**Required favicon files:**
+```
+public/images/[brand-slug]/
+├── favicon.ico          # 32x32 - Browser tab (legacy)
+├── favicon-16x16.png    # 16x16 - Small browser tab
+├── favicon-32x32.png    # 32x32 - Standard browser tab
+├── apple-touch-icon.png # 180x180 - iOS home screen
+├── android-chrome-192x192.png  # Android home screen
+├── android-chrome-512x512.png  # Android splash screen
+```
+
+**Claude should ask:**
+> "Do you have favicon files for this brand? I need the logo in multiple sizes for browser tabs and mobile home screens."
+
+### Image & Asset Requirements
+Images must be optimized for both web and mobile.
+
+**Logo requirements:**
+| Usage | Format | Size | Notes |
+|-------|--------|------|-------|
+| Main logo (web) | PNG/SVG/GIF | 400px wide max | High quality |
+| Main logo (mobile) | Same file | Scales down | Use responsive CSS |
+| Verify success icon | PNG/SVG | 85x85px | Can be brand-specific |
+| Social icons | PNG/SVG | 60x60px | Linktree, Instagram, etc. |
+
+**Image optimization:**
+- Use WebP format when possible (smaller file size)
+- Compress PNGs (TinyPNG or similar)
+- SVG preferred for icons (scales perfectly)
+- GIFs allowed for animated logos (like Fryd)
+- Keep file sizes under 200KB for fast mobile load
+
+**Claude should ask when reviewing a site:**
+> "I see the logo is [format/size]. Do you have:
+> 1. Favicon files for browser tabs?
+> 2. A high-res version for the homepage?
+> 3. Apple touch icon for iOS users?"
+
+### Asset Checklist for New Brands
+
+When migrating or adding a brand, collect these assets:
+
+- [ ] **Logo** - High quality PNG/SVG/GIF (400px+ wide)
+- [ ] **Favicon set** - All sizes listed above
+- [ ] **Brand colors** - Background, text, button (hex codes)
+- [ ] **Verify success icon** - Custom or use default
+- [ ] **Social icons** - If brand has custom ones
+- [ ] **Any other brand imagery** - Backgrounds, patterns, etc.
+
+**If assets are missing:**
+1. Ask the team lead for assets
+2. Or extract from legacy site (download existing images)
+3. Or use defaults (for verify icons, etc.)
+
 ---
 
 ## Live URLs
