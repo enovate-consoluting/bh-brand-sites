@@ -291,11 +291,17 @@ export function GreenTeamHomePage({ previewClientId }: BrandPageProps) {
     setVerifyModalOpen(true);
 
     try {
-      const verifyUrl = previewClientId
-        ? `/api/verify?code=${encodeURIComponent(code.toUpperCase())}&clientId=${previewClientId}`
-        : `/api/verify?code=${encodeURIComponent(code.toUpperCase())}`;
-
-      const response = await fetch(verifyUrl);
+      // Use POST for security - prevents URL sharing of codes
+      const response = await fetch('/api/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code: code.toUpperCase(),
+          clientId: previewClientId || undefined,
+        }),
+      });
       const data = await response.json();
 
       if (data.valid) {

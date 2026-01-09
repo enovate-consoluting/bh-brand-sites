@@ -74,6 +74,10 @@ export default async function HomePage() {
             <VerifyForm
               buttonColor={buttonColor}
               buttonTextColor={buttonTextColor}
+              logoUrl={logoUrl || undefined}
+              companyName={client.company_name}
+              successIcon={brandAssets.verifySuccessIcon}
+              failedIcon={brandAssets.verifyFailedIcon}
             />
 
             {/* Follow Us */}

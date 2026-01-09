@@ -106,6 +106,10 @@ export default async function PreviewHomePage({ params }: PreviewPageProps) {
               buttonColor={buttonColor}
               buttonTextColor={buttonTextColor}
               previewClientId={clientId}
+              logoUrl={logoUrl || undefined}
+              companyName={client.company_name}
+              successIcon={brandAssets.verifySuccessIcon}
+              failedIcon={brandAssets.verifyFailedIcon}
             />
 
             {/* Follow Us */}

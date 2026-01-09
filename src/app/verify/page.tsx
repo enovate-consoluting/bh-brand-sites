@@ -1,106 +1,8 @@
 import { headers } from 'next/headers';
-import Image from 'next/image';
 import Link from 'next/link';
 import { getSiteConfig } from '@/lib/get-site-config';
-import { getClientSlug } from '@/types/database';
-import { getBrandAssets } from '@/brands';
-import { createClient } from '@/lib/supabase/server';
 
-interface VerifyPageProps {
-  searchParams: Promise<{ code?: string }>;
-}
-
-interface VerificationResult {
-  verified: boolean;
-  message: string;
-}
-
-async function verifyCode(code: string, clientId: string): Promise<VerificationResult> {
-  const supabase = await createClient();
-  const trimmedCode = code.trim().toUpperCase();
-
-  // First check NFC chips table
-  const { data: chip } = await supabase
-    .from('nfc_chips')
-    .select('*')
-    .eq('public_id', trimmedCode)
-    .eq('client_id', clientId)
-    .single();
-
-  if (chip) {
-    return {
-      verified: true,
-      message: 'Authentic product',
-    };
-  }
-
-  // Then check label passwords table (separate queries - no FK relationship)
-  const { data: passwordData } = await supabase
-    .from('label_password')
-    .select('*')
-    .eq('password', trimmedCode)
-    .eq('active', 'Y')
-    .limit(1);
-
-  if (passwordData && passwordData.length > 0) {
-    const password = passwordData[0];
-
-    // Get the label_pass_detail
-    const { data: detailData } = await supabase
-      .from('label_pass_detail')
-      .select('*')
-      .eq('label_pass_detail_id', password.label_pass_detail_id)
-      .eq('active', 'Y')
-      .limit(1);
-
-    if (detailData && detailData.length > 0) {
-      const detail = detailData[0];
-
-      // Check if this detail belongs to the requested client
-      if (String(detail.client_id) === clientId) {
-        // Check verify_once logic
-        if (detail.verify_once === 'Y' && password.verify_once_override !== 'N') {
-          const { data: existingValidation } = await supabase
-            .from('label_password_validation')
-            .select('label_pass_val_id')
-            .eq('password', trimmedCode)
-            .limit(1);
-
-          if (existingValidation && existingValidation.length > 0) {
-            return {
-              verified: false,
-              message: detail.verify_once_msg || 'This code has already been validated.',
-            };
-          }
-        }
-
-        // Log the validation (don't await - fire and forget)
-        supabase
-          .from('label_password_validation')
-          .insert({
-            label_pass_detail_id: detail.label_pass_detail_id,
-            create_dt: new Date().toISOString(),
-            password: trimmedCode
-          });
-
-        return {
-          verified: true,
-          message: detail.label_validation_msg || 'Authentic product',
-        };
-      }
-    }
-  }
-
-  return {
-    verified: false,
-    message: 'Code not found. This product is not valid. Please contact your vendor.',
-  };
-}
-
-export default async function VerifyPage({ searchParams }: VerifyPageProps) {
-  const params = await searchParams;
-  const code = params.code || '';
-
+export default async function VerifyPage() {
   const headersList = await headers();
   const host = headersList.get('host') || 'localhost';
   const domain = host.split(':')[0];
@@ -120,160 +22,38 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
     );
   }
 
-  const { client, branding, socialLinks } = siteConfig;
-  const slug = getClientSlug(client);
-  const brandAssets = getBrandAssets(slug);
-
+  const { branding } = siteConfig;
   const backgroundColor = branding?.background_color || '#ffffff';
   const textColor = branding?.text_color || '#000000';
-  const logoUrl = branding?.large_logo_url || client.logo_url;
 
-  // Find linktree link
-  const linktreeLink = socialLinks.find(link => link.platform.toLowerCase() === 'linktree');
-
-  let result: VerificationResult | null = null;
-  if (code) {
-    result = await verifyCode(code, client.client_id);
-  }
-
-  // If no code provided, redirect-like behavior
-  if (!code) {
-    return (
-      <main className="min-h-screen flex items-center justify-center p-8" style={{ backgroundColor, color: textColor }}>
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Please enter a code.</h1>
-          <Link href="/" className="underline">Go back</Link>
-        </div>
-      </main>
-    );
-  }
-
+  // Security: Block direct URL access to verify page
+  // All verification must go through the form on the homepage
   return (
-    <main className="min-h-screen" style={{ backgroundColor, color: textColor }}>
-      {/* Verification Modal */}
-      <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
-        <div
-          className="w-full max-w-sm rounded-2xl p-6 text-center"
-          style={{ backgroundColor: '#fafafa' }}
+    <main className="min-h-screen flex items-center justify-center p-8" style={{ backgroundColor, color: textColor }}>
+      <div className="max-w-md text-center">
+        <div className="mb-6">
+          <svg className="w-16 h-16 mx-auto text-yellow-500\" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+
+        <h1 className="text-2xl font-bold mb-4">Direct URL Access Not Allowed</h1>
+
+        <p className="text-gray-600 mb-6" style={{ color: textColor, opacity: 0.7 }}>
+          For security reasons, verification codes cannot be accessed directly via URL.
+          This helps protect against code sharing and unauthorized verification attempts.
+        </p>
+
+        <p className="text-gray-600 mb-8" style={{ color: textColor, opacity: 0.7 }}>
+          Please use the verification form on our homepage to verify your product.
+        </p>
+
+        <Link
+          href="/"
+          className="inline-block px-8 py-3 bg-black text-white rounded-full font-medium hover:opacity-90 transition-opacity"
         >
-          {result?.verified ? (
-            <>
-              {/* Success Icon */}
-              <div className="mb-4">
-                <Image
-                  src={brandAssets.verifySuccessIcon || '/images/default/verify_success.svg'}
-                  alt="Verified"
-                  width={85}
-                  height={85}
-                  className="mx-auto"
-                />
-              </div>
-
-              {/* Authentic product text */}
-              <h5 className="text-black text-lg font-medium mb-4">
-                Authentic product
-              </h5>
-
-              {/* Small logo */}
-              {logoUrl && (
-                <div className="mb-4">
-                  <Image
-                    src={logoUrl}
-                    alt={client.company_name}
-                    width={122}
-                    height={122}
-                    className="mx-auto rounded-2xl"
-                    unoptimized={logoUrl.endsWith('.gif')}
-                  />
-                </div>
-              )}
-
-              {/* Serial number */}
-              <h1 className="text-black text-lg font-medium">
-                Serial# {code}
-              </h1>
-            </>
-          ) : (
-            <>
-              {/* Failed verification */}
-              <div className="mb-4">
-                <Image
-                  src={brandAssets.verifyFailedIcon || '/images/default/verify_failed.svg'}
-                  alt="Failed"
-                  width={80}
-                  height={80}
-                  className="mx-auto"
-                />
-              </div>
-
-              <h5 className="text-black text-lg font-medium mb-4">
-                Verification Failed
-              </h5>
-
-              <p className="text-gray-700 text-sm mb-4">
-                {result?.message}
-              </p>
-
-              <p className="text-gray-500 text-sm">
-                Code entered: {code}
-              </p>
-            </>
-          )}
-
-          {/* Close/Back button */}
-          <Link
-            href="/"
-            className="inline-block mt-6 text-gray-600 hover:text-gray-800 text-sm underline"
-          >
-            Verify another product
-          </Link>
-        </div>
-      </div>
-
-      {/* Background content (dimmed) */}
-      <div className="container mx-auto px-4 py-8 opacity-50">
-        <div className="flex flex-col items-center justify-center min-h-[80vh]">
-          {logoUrl && (
-            <div className="w-full max-w-xs md:max-w-sm mb-8">
-              <Image
-                src={logoUrl}
-                alt={client.company_name}
-                width={400}
-                height={400}
-                className="w-full h-auto"
-                unoptimized={logoUrl.endsWith('.gif')}
-              />
-            </div>
-          )}
-
-          <div className="w-full max-w-md text-center">
-            <h1 className="text-2xl md:text-3xl font-bold mb-6 uppercase tracking-wide">
-              Verify Your Product
-            </h1>
-
-            {linktreeLink && brandAssets.linktreeIcon && (
-              <div className="mt-8">
-                <h2 className="text-xl font-bold">
-                  Follow us:
-                  <a
-                    href={`https://linktr.ee/${linktreeLink.handle}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block ml-3 align-middle"
-                  >
-                    <Image
-                      src={brandAssets.linktreeIcon}
-                      alt="Linktree"
-                      width={60}
-                      height={60}
-                      className="inline-block"
-                    />
-                  </a>
-                </h2>
-              </div>
-            )}
-          </div>
-        </div>
+          Go to Verification Form
+        </Link>
       </div>
     </main>
   );
