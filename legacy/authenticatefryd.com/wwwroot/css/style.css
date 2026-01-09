@@ -1,0 +1,466 @@
+@font-face {
+  font-family: "Poppins-Light";
+  src: url(fontfamily/Poppins-Light.ttf);
+}
+@font-face {
+  font-family: "Poppins-Regular";
+  src: url(fontfamily/Poppins-Regular.ttf);
+}
+@font-face {
+  font-family: "Poppins-Medium";
+  src: url(fontfamily/Poppins-Medium.ttf);
+}
+@font-face {
+  font-family: "Poppins-SemiBold";
+  src: url(fontfamily/Poppins-SemiBold.ttf);
+}
+@font-face {
+  font-family: "Poppins-Bold";
+  src: url(fontfamily/Poppins-Bold.ttf);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins-Regular";
+  color: white;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background: #6d171c;
+}
+
+.main-banner {
+  background-repeat: no-repeat;
+  background-size: 100%;
+  position: relative;
+}
+.main-banner2 {
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+.video-wrapper:after {
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  content: "";
+  z-index: 0;
+  height: 100%;
+}
+
+.header {
+  padding-bottom: 50px;
+  padding-top: 15px;
+  height: 62%;
+}
+.wow {
+  padding: 15px 0px 3px 0px;
+}
+img.buz {
+  width: 100%;
+}
+.bg-image img {
+  max-width: 100%;
+}
+
+.d-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.color-logo1.success-img {
+  width: 122px;
+  border-radius: 20px;
+}
+.content-verify {
+  padding: 20px;
+  border-radius: 20px;
+  background:#ffdcdd;
+  border: navajowhite;
+}
+h1.serial-no {
+  font-size: 18px;
+  font-weight: 500;
+  color: #000 !important;
+}
+#verifyContent h5 {
+  color: #000;
+  font-size: 18px;
+  font-weight: 500;
+}
+img#verifyImg {
+  max-width: 85px;
+  margin: 19px 0px 0px 15px;
+}
+.verify-modal {
+  width: 400px;
+  top: 18%;
+  margin: 30px auto;
+}
+.header .logo {
+  height: 230px;
+}
+.header .dropdown .btn-default {
+  background: none;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 10px 20px;
+}
+img.img-color {
+  width: 100%;
+}
+h2.flw {
+  text-align: center;
+}
+img.image-clr {
+  width: 20%;
+  position: relative;
+  right: 25px;
+}
+.header .header-text .color-logo {
+  margin: 0 auto;
+  border-radius: 70px;
+}
+.header .header-text h1 {
+  color: #fff;
+  font-size: 40px;
+  font-family: "Poppins-Bold";
+  margin-top: 0;
+}
+.newsletter .newsletter-form {
+  position: relative;
+  margin-top: 23px;
+  z-index: 999;
+}
+.main-space {
+  margin-left: 15px;
+}
+.newsletter .newsletter-form input {
+  height: 55px;
+  width: 100%;
+  padding: 5px 20px;
+  border-radius: 30px;
+  outline: none;
+  border: 0;
+  background-color: #fff;
+  color: #514f4f;
+}
+.newsletter .newsletter-form button {
+  width: 116px;
+  height: 36px;
+  border-radius: 30px;
+  color: #fff;
+  position: absolute;
+  right: 9px;
+  bottom: 9px;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  border: 0px;
+  outline: none;
+  text-decoration: none;
+  cursor: pointer;
+  background: #000;
+}
+img.insta {
+  width: 35px !important;
+  margin: 0px 17px;
+}
+img.tele {
+  width: 35px;
+}
+.header .header-text h2 {
+  color: #fff;
+  margin-top: 20px;
+  font-size: 24px;
+  font-family: "Poppins-Bold";
+  position: relative;
+  left: 20px;
+  margin: 0px 32px;
+}
+a:hover {
+  text-decoration: none;
+}
+.header .header-text .follow-us {
+  list-style-type: none;
+  padding-left: 0;
+}
+.header .header-text .follow-us li {
+  display: inline;
+  margin-right: 15px;
+}
+.image-section {
+  padding: 115px 0;
+  margin: -18.875rem 0 0;
+}
+
+.footer {
+  padding-top: 50px;
+}
+.image-section-1 {
+  padding: 75px 0px;
+}
+.footer .footer-logo {
+  height: 35px;
+}
+.footer p {
+  padding-right: 20px;
+  line-height: 26px;
+}
+.footer h4 {
+  font-family: "Poppins-SemiBold";
+  color: white;
+  font-size: 20px;
+  padding: 5px 0px;
+}
+.footer ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+.footer ul li {
+  margin-bottom: 10px;
+}
+.footer ul li a {
+  font-size: 15px;
+  color: white;
+}
+.footer-contact .media {
+  margin-bottom: 10px;
+}
+.footer-contact .media a span {
+  color: #fbbb32;
+  font-size: 18px;
+  margin-top: 5px;
+}
+.footer-contact .media p a {
+  color: white;
+  text-decoration: none;
+}
+.footer-contact .media p {
+  font-size: 15px;
+  color: white;
+}
+.copyright {
+  border-top: 1px solid white;
+  padding-top: 15px;
+  padding-bottom: 10px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.copyright p {
+  font-size: 16px;
+}
+.copyright ul li {
+  display: inline;
+  margin-right: 20px;
+}
+.copyright ul li img {
+  height: 18px;
+}
+.bg-image {
+  background-image: url(../images/buzzbar2.png);
+  width: 420px;
+  height: 420px;
+  margin: 0 auto;
+}
+/************ Extras ***********/
+.btnStyle {
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  transition: 300ms ease-out !important;
+}
+.btnStyle:hover {
+  transform: scale(0.9) !important;
+}
+.btnStyle2 {
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  transition: 300ms ease-out !important;
+}
+.btnStyle2:hover {
+  transform: scale(1.1) !important;
+}
+.block {
+  display: block;
+}
+.content-div {
+  width: 50%;
+}
+a:hover {
+  text-decoration: none;
+}
+@media only screen and (min-width: 1921px) {
+  .header {
+    height: 50%;
+  }
+}
+
+@media only screen and (max-width: 1170px) {
+  .header {
+    height: 75%;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  img.buz {
+    width: 315px;
+  }
+
+  .image-section {
+    margin-top: 3px;
+  }
+  .header .header-text h1 {
+    font-size: 25px !important;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .header {
+    height: auto;
+  }
+
+  img.image-clr {
+    width: 30%;
+    position: relative;
+    right: 25px;
+  }
+  .footer-contact.wow.fadeInUp.animated {
+    padding-bottom: 10px;
+  }
+  .wow {
+    padding: 0px;
+  }
+  img.buz {
+    width: 320px;
+  }
+  .bg-image {
+    height: auto;
+  }
+  .bg-image {
+    width: 345px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+
+  .header {
+    /* height: 900px; */
+    background-size: cover;
+  }
+  .header .header-text {
+    margin-top: 20px;
+    text-align: center;
+  }
+  .header .header-text .color-logo {
+    margin: 30px auto;
+  }
+  .block {
+    display: inline;
+  }
+  .header .header-text h1 {
+    font-size: 30px;
+  }
+  .image-section {
+    margin-top: 0px;
+    text-align: center;
+  }
+  .image-section img {
+    margin: 10px auto;
+  }
+  .footer {
+    padding-top: 0px;
+    text-align: center;
+  }
+  .copyright {
+    display: block;
+  }
+  .footer .media-left,
+  .footer .media > .pull-left {
+    float: none !important;
+  }
+  .newsletter {
+    max-width: 400px;
+    margin: auto;
+  }
+  .header {
+    height: auto;
+  }
+  .newsletter .newsletter-form button {
+    position: absolute;
+    right: 15px;
+    bottom: 9px;
+  }
+  .newsletter .newsletter-form input {
+    width: 95%;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .header .header-text {
+    margin-top: 0;
+  }
+  .header .header-text h1 {
+    text-align: center;
+    font-size: 30px;
+  }
+  .header .header-text .color-logo {
+    height: 200px;
+    margin: 20px auto;
+  }
+  .newsletter {
+    max-width: 400px;
+    margin: auto;
+  }
+  .header {
+    /* height: 900px; */
+    padding-bottom: 100px;
+  }
+  .image-section {
+    padding-bottom: 50px;
+    margin-top: 30px;
+  }
+  .block {
+    display: inline;
+  }
+  .header .header-text h2 {
+    text-align: center;
+  }
+  .header .header-text .follow-us {
+    text-align: center;
+  }
+  .footer p {
+    padding-right: 0;
+    line-height: 22px;
+    font-size: 13px;
+  }
+  .footer ul li a {
+    font-size: 14px;
+  }
+  .footer-contact .media p {
+    font-size: 14px;
+  }
+  .footer-contact .media {
+    margin-bottom: 5px;
+    margin-top: 0;
+  }
+  .footer h4 {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .header .header-text {
+    margin-top: 50px;
+  }
+  .header .header-text h1 {
+    font-size: 40px;
+  }
+}
+@media (min-width: 1480px) and (max-width: 5120px) {
+}
+@media only screen and (max-width: 414px) {
+  .verify-modal {
+    width: 95%;
+  }
+}

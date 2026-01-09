@@ -1,0 +1,386 @@
+body {
+   margin: 0;
+   padding: 0;
+   overflow-x: hidden;
+   font-family: 'AlexBrush', cursive;
+}
+
+section.verification-wrapper {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   min-height: 100vh;
+   height: 100vh;
+   position: relative;
+   overflow: hidden;
+}
+
+
+.video-background {
+   position: absolute;
+   inset: 0;
+   width: 100%;
+   height: 100%;
+   overflow: hidden;
+   z-index: 1;
+}
+
+.video-background iframe {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   width: 100vw;
+   height: 100vh;
+   transform: translate(-50%, -50%);
+}
+
+.video-background img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+}
+
+
+.video-overlay {
+   position: absolute;
+   inset: 0;
+   background: url('img/HEARTS.png') center/cover no-repeat;
+   z-index: 2;
+   pointer-events: none;
+}
+
+
+#social-icons {
+   z-index: 3;
+   opacity: 0;
+   transition: opacity 0.3s ease;
+}
+
+#social-icons.show {
+   opacity: 1;
+}
+
+
+.verify-inputbox {
+   position: relative;
+   z-index: 3;
+   width: 100%;
+   max-width: 500px;
+   padding: 20px;
+   box-sizing: border-box;
+}
+
+.verify-inputbox #verifyImg {
+   width: 100%;
+   max-width: 400px;
+   height: auto;
+   display: block;
+   margin: 0 auto;
+}
+
+.verify-inputbox .success-img {
+   width: 100%;
+   max-width: 401px;
+   height: auto;
+   position: relative;
+   top: -15px;
+}
+
+
+.verifyInfo {
+   width: 100%;
+   max-width: 400px;
+   margin: 0 auto;
+   position: relative;
+   z-index: 999;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 15px;
+}
+
+.verifyInfo h2 {
+   color: #fff;
+   font-size: clamp(24px, 5vw, 30px);
+   font-family: 'Kitchen police', sans-serif;
+   font-weight: 800;
+   margin: 0;
+}
+
+.verifyInfo h5,
+.verifyInfo h1 {
+   margin: 0;
+}
+
+
+.verifyInfo .IconBox {
+   width: 100%;
+   max-width: 290px;
+   margin-bottom: 10px;
+}
+
+.IconBox img {
+   width: 100%;
+   height: auto;
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.25));
+}
+
+
+.verify-btn {
+   width: 100%;
+   max-width: 280px;
+   height: auto;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-bottom: 15px;
+}
+
+.verify-btn img {
+   width: 100%;
+   height: auto;
+   max-width: 100%;
+   display: block;
+}
+
+
+.product-text {
+   text-align: center;
+   color: #ffffff;
+   width: 100%;
+}
+
+.product-text h3 {
+   font-size: clamp(28px, 6vw, 45px);
+   margin: 0;
+}
+
+.product-text h5 {
+   font-size: clamp(22px, 5vw, 34px);
+   margin: 0;
+}
+
+.product-text h4 {
+   padding: clamp(10px, 2vw, 14px) clamp(20px, 4vw, 32px);
+   background-color: #9b5c73;
+   color: #eab1d2;
+   border: 5px solid #e7b7c8;
+   margin: 16px 0;
+   border-radius: 18px;
+   font-size: clamp(2.8rem, 4vw, 3rem);
+   display: inline-block;
+   font-weight: 600;
+}
+
+.product-text span {
+   font-size: clamp(1.8rem, 3vw, 2.3rem) !important;
+}
+
+
+.imageicon {
+   text-align: center;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 8px;
+   flex-wrap: wrap;
+   margin-bottom: 10px;
+   width: 100%;
+}
+
+.imageicon img {
+   width: 100%;
+   max-width: 260px;
+   height: auto;
+}
+
+.imageicon.ig-icon img {
+   max-width: 50px;
+}
+
+
+.cap_logo {
+   width: 100%;
+   text-align: center;
+}
+
+.cap_logo img {
+   width: 100%;
+   max-width: 100px;
+   height: auto;
+}
+
+
+@media (min-aspect-ratio: 16/9) {
+   .video-background iframe {
+      height: 56.25vw;
+   }
+}
+
+@media (max-aspect-ratio: 16/9) {
+   .video-background iframe {
+      width: 177.78vh;
+   }
+}
+
+
+@media screen and (max-width: 1024px) {
+   .verify-inputbox {
+      max-width: 450px;
+   }
+
+   .verifyInfo {
+      max-width: 380px;
+   }
+}
+
+
+@media screen and (max-width: 767px) {
+   .verify-inputbox {
+      max-width: 400px;
+      padding: 15px;
+   }
+
+   .verifyInfo {
+      max-width: 360px;
+      gap: 12px;
+   }
+
+   .verify-btn {
+      max-width: 350px;
+   }
+
+   .verifyInfo .IconBox {
+      max-width: 320px;
+   }
+}
+
+@media screen and (max-width: 576px) {
+   section.verification-wrapper {
+      min-height: 100vh;
+      padding: 15px 0;
+   }
+
+   .verify-inputbox {
+      padding: 10px;
+      max-width: 95%;
+   }
+
+   .verify-inputbox #verifyImg {
+      max-width: 350px;
+      margin-top: 20px;
+   }
+
+   .verifyInfo {
+      max-width: 100%;
+      gap: 10px;
+   }
+
+   .verifyInfo .IconBox {
+      max-width: 270px;
+      text-align: center;
+   }
+
+   .verify-btn {
+      max-width: 370px;
+   }
+
+   .verify-btn img {
+      width: 370px;
+   }
+
+   .product-text h4 {
+      font-size: clamp(2.5rem, 5vw, 2rem);
+      padding: 8px 16px;
+      margin: 12px 0;
+   }
+
+   .imageicon {
+      gap: 5px;
+   }
+
+   .imageicon img {
+      max-width: 210px;
+   }
+      .IconBox img{width: 70%;}
+}
+
+
+@media screen and (max-width: 375px) {
+   .verify-inputbox {
+      padding: 8px;
+   }
+
+   .verify-inputbox #verifyImg {
+      max-width: 300px;
+   }
+
+  
+
+   .verify-btn {
+      max-width: 330px;
+   }
+
+   .imageicon img {
+      max-width: 160px;
+   }
+   
+      .verifyInfo{
+         gap: 2px;
+      }
+
+   .cap_logo img {
+      max-width: 60px;
+   }
+
+   .product-text h4 {
+      font-size: 1.7rem;
+   }
+}
+
+
+@media screen and (max-height: 500px) and (orientation: landscape) {
+   section.verification-wrapper {
+      height: auto;
+      min-height: 100vh;
+   }
+
+   .verify-inputbox {
+      transform: none;
+   }
+
+   .verifyInfo {
+      gap: 8px;
+   }
+
+   .verify-btn {
+      max-height: 150px;
+   }
+
+   .verifyInfo .IconBox {
+      max-width: 200px;
+   }
+}
+
+
+@media screen and (min-width: 1400px) {
+   .verify-inputbox {
+      max-width: 550px;
+   }
+
+   .verifyInfo {
+      max-width: 450px;
+   }
+}
+
+@media print {
+
+   .video-background,
+   .video-overlay {
+      display: none;
+   }
+
+   section.verification-wrapper {
+      height: auto;
+   }
+}

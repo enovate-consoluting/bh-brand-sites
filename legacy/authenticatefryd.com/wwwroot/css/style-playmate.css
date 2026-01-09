@@ -1,0 +1,311 @@
+@font-face {
+     font-family: 'Poppins-Light';
+     src: url(fontfamily/Poppins-Light.ttf);
+}
+ @font-face {
+     font-family: 'Poppins-Regular';
+     src: url(fontfamily/Poppins-Regular.ttf);
+}
+ @font-face {
+     font-family: 'Poppins-Medium';
+     src: url(fontfamily/Poppins-Medium.ttf);
+}
+ @font-face {
+     font-family: 'Poppins-SemiBold';
+     src: url(fontfamily/Poppins-SemiBold.ttf);
+}
+ @font-face {
+     font-family: 'Poppins-Bold';
+     src: url(fontfamily/Poppins-Bold.ttf);
+}
+ body {
+     margin: 0;
+     padding: 0;
+     font-family: 'Poppins-Regular';
+     color: white;
+	 background-color: #FFFFFF;	 
+}
+ .header{
+     height: 650px;
+     padding-bottom: 50px;
+     padding-top: 15px;
+	 background-image:url(../images/playmate_bg.png);
+	 background-size: cover;
+	 background-position:top center;	 
+}
+ .d-flex{
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+}
+ .header .logo{
+     height: 50px;
+}
+ .header .dropdown .btn-default{
+     background: none;
+     color: #000;
+     border: 1px solid #fff;
+     padding: 10px 20px;
+}
+ .header .header-text{
+     margin-top: 80px;
+}
+ .header .header-text .color-logo{
+     width: 360px;
+	 height: auto;
+     margin:0;
+}
+ .header .header-text h1{
+     color: white;
+     font-size: 40px;
+     font-family: 'Poppins-Bold';
+}
+ .newsletter .newsletter-form {
+     position: relative;
+     margin-top: 23px;
+     z-index: 999;
+}
+ .newsletter .newsletter-form input {
+     height: 55px;
+     width: 100%;
+     padding: 5px 20px;
+     border-radius: 6px;
+     outline: none;
+     border: 1px solid #CCCCCC;
+     background-color: #fff;
+     color: #514F4F;
+}
+ .newsletter .newsletter-form button {
+     width: 116px;
+     height: 36px;
+     border-radius: 6px;
+     background-image: linear-gradient(to right, #44DBE8 , #90DA9A);
+     color: #fff;
+     position: absolute;
+     right: 9px;
+     bottom: 9px;
+     display: inline-block;
+     margin: 0;
+     padding: 0;
+     border: 0px;
+     outline: none;
+     text-decoration: none;
+     cursor: pointer;
+}
+ .header .header-text h2{
+     color: white;
+     margin-top: 20px;
+     font-size: 24px;
+     font-family: 'Poppins-Bold';
+}
+ .header .header-text .follow-us{
+     list-style-type: none;
+     padding-left: 0;
+}
+ .header .header-text .follow-us li{
+     display: inline;
+     margin-right: 15px;
+}
+.bottom-background {
+     background: none;	 
+}
+ .image-section{
+     padding-bottom: 50px;
+     margin-top: -100px; 
+}
+ .image-section img{
+     width: 100%;
+}
+ .footer{
+     padding-top: 50px;
+}
+ .footer .footer-logo{
+     height: 35px;
+}
+ .footer p{
+     padding-right: 20px;
+     line-height: 26px;
+}
+ .footer h4{
+     font-family: 'Poppins-SemiBold';
+     color: black;
+     margin-bottom: 20px;
+     font-size: 20px;
+}
+ .footer ul{
+     list-style-type: none;
+     padding-left: 0;
+}
+ .footer ul li{
+     margin-bottom: 10px;
+}
+ .footer ul li a{
+     font-size: 15px;
+     color:black;
+}
+ .footer-contact .media{
+     margin-bottom: 10px;
+}
+ .footer-contact .media a span{
+     color: #FBBB32;
+     font-size: 18px;
+     margin-top: 5px;
+}
+ .footer-contact .media p a{
+     color: black;
+     text-decoration: none;
+}
+ .footer-contact .media p{
+     font-size: 15px;
+     color: white;
+}
+ .copyright{
+     border-top: 1px solid white;
+     padding-top: 15px;
+     padding-bottom: 10px;
+     margin-top: 25px;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+	 color:black;
+}
+ .copyright p{
+     font-size: 16px;
+}
+ .copyright ul li{
+     display: inline;
+     margin-right: 20px;
+}
+ .copyright ul li img{
+     height: 18px;
+}
+/************ Extras ***********/
+ .btnStyle {
+     transform: translateZ(0) !important;
+     backface-visibility: hidden !important;
+     transition: 300ms ease-out !important;
+}
+ .btnStyle:hover {
+     transform: scale(0.9) !important;
+}
+ .btnStyle2 {
+     transform: translateZ(0) !important;
+     backface-visibility: hidden !important;
+     transition: 300ms ease-out !important;
+}
+ .btnStyle2:hover {
+     transform: scale(1.1) !important;
+}
+ .block{
+     display: block;
+}
+ @media only screen and (max-width: 767px){
+     .header .logo {
+         height: 43px;
+    }
+     .header{
+         height: auto;
+         background-size: cover;
+    }
+     .header .header-text {
+         margin-top: 20px;
+         text-align: center;
+    }
+     .header .header-text .color-logo {
+         width: 360px;
+		 height: auto;
+         margin: 30px auto;
+    }
+     .block{
+         display: inline;
+    }
+     .header .header-text h1{
+         font-size: 30px;
+    }
+     .image-section{
+         margin-top: 30px;
+         text-align: center;
+    }
+     .image-section img{
+         width: 250px;
+         margin: 10px auto;
+    }
+     .footer {
+         padding-top: 0px;
+         text-align: center;
+    }
+     .copyright{
+         display: block;
+    }
+     .footer .media-left, .footer .media>.pull-left{
+         float: none !important;
+    }
+     .newsletter {
+         max-width: 400px;
+         margin: auto;
+    }
+}
+ @media (min-width: 768px) and (max-width: 991px){
+     .header .header-text {
+         margin-top: 0;
+    }
+     .header .header-text h1{
+         text-align: center;
+         font-size: 30px;
+    }
+     .header .header-text .color-logo {
+         width: 360px;
+		 height: auto;
+         margin: 20px auto;
+    }
+     .newsletter {
+         max-width: 400px;
+         margin: auto;
+    }
+     .header{
+         height: auto;
+         padding-bottom: 100px;
+    }
+     .image-section {
+         padding-bottom: 50px;
+         margin-top: 30px;
+    }
+     .block{
+         display: inline;
+    }
+     .header .header-text h2{
+         text-align: center;
+    }
+     .header .header-text .follow-us{
+         text-align: center;
+    }
+     .footer p {
+         padding-right: 0;
+         line-height: 22px;
+         font-size: 13px;
+    }
+     .footer ul li a{
+         font-size: 14px;
+    }
+     .footer-contact .media p{
+         font-size: 14px;
+    }
+     .footer-contact .media {
+         margin-bottom: 5px;
+         margin-top: 0;
+    }
+     .footer h4{
+         font-size: 18px;
+    }
+}
+ @media (min-width: 992px) and (max-width: 1199px){
+     .header .header-text {
+         margin-top: 50px;
+    }
+     .header .header-text h1{
+         font-size: 32px;
+    }
+}
+ @media (min-width: 1480px) and (max-width: 5120px){
+}
+ 
