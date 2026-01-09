@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
 
   if (!code) {
     return NextResponse.json(
-      { verified: false, message: 'No code provided' },
+      { valid: false, message: 'No code provided' },
       { status: 400 }
     );
   }
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
 
   if (!targetClientId) {
     return NextResponse.json(
-      { verified: false, message: 'Could not determine client' },
+      { valid: false, message: 'Could not determine client' },
       { status: 400 }
     );
   }
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
 
   if (!details || details.length === 0) {
     return NextResponse.json({
-      verified: false,
+      valid: false,
       message: 'No verification batches found for this client.',
     });
   }
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
 
   if (labelCode) {
     return NextResponse.json({
-      verified: true,
+      valid: true,
       message: 'Authentic product',
       serial: labelCode.serial_num || code,
     });
@@ -88,14 +88,14 @@ export async function GET(request: NextRequest) {
 
   if (chip) {
     return NextResponse.json({
-      verified: true,
+      valid: true,
       message: 'Authentic product',
       serial: code,
     });
   }
 
   return NextResponse.json({
-    verified: false,
+    valid: false,
     message: 'Code not found. This product may not be authentic.',
   });
 }
