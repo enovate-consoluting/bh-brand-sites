@@ -17,12 +17,13 @@ interface VerificationResult {
 
 async function verifyCode(code: string, clientId: string): Promise<VerificationResult> {
   const supabase = await createClient();
+  const trimmedCode = code.trim().toUpperCase();
 
-  // Look up the chip by public_id in nfc_chips table
+  // First check NFC chips table
   const { data: chip } = await supabase
     .from('nfc_chips')
     .select('*')
-    .eq('public_id', code)
+    .eq('public_id', trimmedCode)
     .eq('client_id', clientId)
     .single();
 
@@ -31,6 +32,63 @@ async function verifyCode(code: string, clientId: string): Promise<VerificationR
       verified: true,
       message: 'Authentic product',
     };
+  }
+
+  // Then check label passwords table (separate queries - no FK relationship)
+  const { data: passwordData } = await supabase
+    .from('label_password')
+    .select('*')
+    .eq('password', trimmedCode)
+    .eq('active', 'Y')
+    .limit(1);
+
+  if (passwordData && passwordData.length > 0) {
+    const password = passwordData[0];
+
+    // Get the label_pass_detail
+    const { data: detailData } = await supabase
+      .from('label_pass_detail')
+      .select('*')
+      .eq('label_pass_detail_id', password.label_pass_detail_id)
+      .eq('active', 'Y')
+      .limit(1);
+
+    if (detailData && detailData.length > 0) {
+      const detail = detailData[0];
+
+      // Check if this detail belongs to the requested client
+      if (String(detail.client_id) === clientId) {
+        // Check verify_once logic
+        if (detail.verify_once === 'Y' && password.verify_once_override !== 'N') {
+          const { data: existingValidation } = await supabase
+            .from('label_password_validation')
+            .select('label_pass_val_id')
+            .eq('password', trimmedCode)
+            .limit(1);
+
+          if (existingValidation && existingValidation.length > 0) {
+            return {
+              verified: false,
+              message: detail.verify_once_msg || 'This code has already been validated.',
+            };
+          }
+        }
+
+        // Log the validation (don't await - fire and forget)
+        supabase
+          .from('label_password_validation')
+          .insert({
+            label_pass_detail_id: detail.label_pass_detail_id,
+            create_dt: new Date().toISOString(),
+            password: trimmedCode
+          });
+
+        return {
+          verified: true,
+          message: detail.label_validation_msg || 'Authentic product',
+        };
+      }
+    }
   }
 
   return {
