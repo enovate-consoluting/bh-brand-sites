@@ -166,59 +166,31 @@ export function DMGHomePage({ siteConfig }: BrandPageProps) {
     );
   }
 
-  // Error state - NOT AUTHENTIC
+  // Error state - NOT AUTHENTIC (matches legacy inactive.cfm design)
   if (verifyState === 'error') {
     return (
-      <section className="dmg-wrapper">
-        <div className="dmg-background">
-          <Image
-            src="/images/dmg/BACKGROUND COLOR.png"
-            alt="Background"
-            fill
-            style={{ objectFit: 'cover' }}
-            priority
-          />
-        </div>
-        <div className="dmg-overlay" />
-        <div className="dmg-content">
-          <div className="dmg-verify-box">
-            <div className="dmg-title">
-              <Image
-                src="/images/dmg/LOVERS ONLY TITLE.png"
-                alt="Lovers Only"
-                width={280}
-                height={100}
-                className="w-full h-auto"
-              />
-            </div>
-
-            {/* Red X - NOT AUTHENTIC */}
-            <div className="py-4">
-              <div className="w-20 h-20 mx-auto bg-red-500 rounded-full flex items-center justify-center animate-pulse">
-                <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </div>
-            </div>
-
-            <div className="text-center py-4">
-              <h2 className="text-red-500 text-2xl font-bold mb-4">NOT AUTHENTIC!</h2>
-              <p className="text-white/80 text-sm px-4">{errorMessage}</p>
-              <p className="text-white/60 text-xs mt-4">
-                If you continue to see this message, the product is not authentic.
-              </p>
-            </div>
-
-            <div className="dmg-logo">
-              <Image
-                src="/images/dmg/brand logo.png"
-                alt={siteConfig.client?.company_name || 'DMG Hats'}
-                width={100}
-                height={100}
-                className="w-full h-auto"
-              />
-            </div>
+      <section className="min-h-screen bg-white flex items-center justify-center px-5 py-10">
+        <div className="max-w-md w-full text-center">
+          {/* Blinking Red X */}
+          <div className="mb-8 animate-pulse">
+            <Image
+              src="/images/default/red-x.png"
+              alt="Not Authentic"
+              width={120}
+              height={120}
+              className="mx-auto"
+            />
           </div>
+
+          {/* Error Message */}
+          <p className="text-[#767171] text-lg leading-relaxed px-4 mb-8">
+            This NFC product is <strong>NOT AUTHENTIC!</strong> This link is unique to one NFC chip that has been compromised and currently has been discontinued. If you continue to see this message, the product is <strong>not authentic!</strong>
+          </p>
+
+          {/* Footer */}
+          <p className="text-[#A3A3A3] text-sm mt-16">
+            Powered and designed by Scanacart LLC.
+          </p>
         </div>
       </section>
     );
