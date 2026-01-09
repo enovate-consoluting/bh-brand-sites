@@ -498,6 +498,8 @@ Tables:
 - ✅ Fryd configured as first brand
 - ✅ Default assets for brands without custom icons
 - ✅ Deployed to Vercel with auto-deploy
+- ✅ Verify API route (`/api/verify`)
+- ✅ Green Team enhanced with custom font and styling
 
 ### In Progress
 - ⏳ Legacy database connection (sys admin getting credentials)
@@ -525,7 +527,7 @@ Tables:
 | Fryd | 2126 | authenticfryd.com | custom | in progress | Has age gate |
 | Heaters | 2128 | heatersofficial.com | custom | needs final review | Custom homepage |
 | DMG | 2145 | dmgbrandverify.com | custom | needs final review | Hat verification |
-| Green Team | 1990 | verifygreenteam.com | custom | needs final review | **Duplicate client: 2103** |
+| Green Team | 1990 | verifygreenteam.com | custom | in progress | Enhanced homepage, custom font |
 | Stealthy Air | TBD | stealthyair.com | custom | needs final review | **Client NOT in DB** |
 | Waxx Brandz | 1852 | waxxbrandz.com | custom | needs final review | **Duplicate client: 2075** |
 
@@ -562,6 +564,28 @@ The main site (`/`) uses domain detection. Use preview mode instead:
 ---
 
 ## Session Log
+
+### January 9, 2026 (Session 3)
+**Goal:** Enhance Green Team brand and add verify API
+
+**What was done:**
+- Enhanced Green Team homepage with full custom styling
+- Added Posey custom font for Green Team (`public/fonts/greenteam/`)
+- Created verify API route (`src/app/api/verify/route.ts`)
+- Updated preview pages for better brand support
+- Deployed to production (commit `5582e2a`)
+
+**Key files created/modified:**
+- `src/brands/greenteam/HomePage.tsx` - Major enhancements (947+ lines)
+- `src/brands/greenteam/greenteam.css` - Custom styles
+- `src/app/api/verify/route.ts` - New verify API endpoint
+- `public/fonts/greenteam/Posey-Regular.ttf` - Custom font
+
+**Deployment:**
+- Successfully pushed to production
+- Live at: https://bh-brand-sites.vercel.app
+
+---
 
 ### January 9, 2026 (Session 2)
 **Goal:** Migrate 5 most recent ColdFusion sites to Next.js
@@ -648,4 +672,4 @@ The main site (`/`) uses domain detection. Use preview mode instead:
 
 ---
 
-*Last updated: January 9, 2026 (Session 2)*
+*Last updated: January 9, 2026 (Session 3)*
