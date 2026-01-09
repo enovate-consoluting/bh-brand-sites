@@ -506,6 +506,11 @@ Tables:
 | Stealthy Air | TBD | stealthyair.com | custom | needs final review | **Client NOT in DB** |
 | Waxx Brandz | 1852 | waxxbrandz.com | custom | needs final review | **Duplicate client: 2075** |
 
+### Skipped Domains
+| Domain | Reason | Date |
+|--------|--------|------|
+| verifyqualitycontrol.com | Domain changed - renamed to another domain in our list of 166 | Jan 9, 2026 |
+
 ### Database Issues to Resolve
 - **Green Team**: Has duplicate client records (1990 and 2103). Recommend keeping 1990 (has logo).
 - **Waxx Brandz**: Has duplicate client records (1852 and 2075). Recommend keeping 1852 (has logo).
@@ -568,11 +573,25 @@ The main site (`/`) uses domain detection. Use preview mode instead:
 - Waxx Brandz: DUPLICATE - client_id 1852 and 2075
 - Stealthy Air: NOT FOUND - needs to be created
 
-**Next steps:**
-- Resolve duplicate client records
-- Create Stealthy Air client in database
-- Wire up verification for all brands (once, works for all)
-- Test via preview mode
+**Next steps for AP:**
+1. Resolve duplicate client records in database:
+   - Green Team: Keep client_id 1990, delete/deactivate 2103
+   - Waxx Brandz: Keep client_id 1852, delete/deactivate 2075
+2. Create Stealthy Air client in database (currently missing)
+3. Wire up verification API for all brands (do once, works for all)
+4. Test each brand via preview mode:
+   - `/preview/2145` - DMG
+   - `/preview/1990` - Green Team
+   - `/preview/1852` - Waxx Brandz
+   - `/preview/[new-id]` - Stealthy Air (after creating client)
+5. Continue migrating remaining sites from the 166 list
+
+**Decisions made this session:**
+- Build UI/frontend only for now - verification backend will be wired up once for all brands
+- CDN image URLs (like Cloudflare imagedelivery) stay as-is in code, don't download
+- Local images from FTP get downloaded to `public/images/[brand]/`
+- verifyqualitycontrol.com SKIPPED - domain was renamed to another in our list
+- Sites marked "needs final review" = UI complete, needs testing
 
 ---
 
