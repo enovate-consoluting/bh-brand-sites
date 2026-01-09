@@ -608,14 +608,14 @@ Tables:
 - **complete** - Fully migrated and tested
 
 ### Brands with Custom Overrides
-| Brand | Client ID | Domain | Type | Status | Notes |
-|-------|-----------|--------|------|--------|-------|
-| Fryd | 2126 | authenticfryd.com | custom | needs final review | Desktop and Mobile UI tested, no defects |
-| Heaters | 2128 | heatersofficial.com | custom | needs final review | Desktop and Mobile UI tested, no defects |
-| DMG | 2145 | dmgbrandverify.com | custom | needs final review | Mobile tested, no defects. Supports ?product=black-hat and ?product=pink-hat |
-| Green Team | 1990 | verifygreenteam.com | custom | needs final review | Desktop and Mobile UI tested, no defects |
-| Stealthy Air | TBD | stealthyair.com | custom | needs final review | **Client NOT in DB** |
-| Waxx Brandz | 1852 | waxxbrandz.com | custom | needs final review | **Duplicate client: 2075** |
+| Brand | Client ID | Domain | Type | Status | Notes | Pending |
+|-------|-----------|--------|------|--------|-------|---------|
+| Fryd | 2126 | authenticfryd.com | custom | needs final review | Desktop and Mobile UI tested, no defects | Verification with Production labels |
+| Heaters | 2128 | heatersofficial.com | custom | needs final review | Desktop and Mobile UI tested, no defects | Verification with Production labels |
+| DMG | 2145 | dmgbrandverify.com | custom | needs final review | Mobile tested, no defects. Supports ?product=black-hat and ?product=pink-hat | |
+| Green Team | 1990 | verifygreenteam.com | custom | needs final review | Desktop and Mobile UI tested, no defects | Verification with Production labels |
+| Stealthy Air | TBD | stealthyair.com | custom | needs final review | **Client NOT in DB** | |
+| Waxx Brandz | 1852 | waxxbrandz.com | custom | needs final review | **Duplicate client: 2075** | |
 
 ### Skipped Domains
 | Domain | Reason | Date |
