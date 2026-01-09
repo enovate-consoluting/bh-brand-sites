@@ -548,6 +548,26 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 ```
 
+### Supabase Pro Settings
+
+**Statement Timeout** - Default is 2 minutes. For large migrations, increase to 5 minutes:
+```sql
+-- Check current timeout
+SHOW statement_timeout;
+
+-- Increase to 5 minutes
+ALTER DATABASE postgres SET statement_timeout = '300s';
+```
+
+### Large Table Migration Tips
+
+When migrating tables with 100M+ rows:
+- Use batch sizes of 5,000-10,000 rows
+- Expect slowdown as table grows (indexes need updating)
+- Statement timeouts may occur - increase timeout setting
+- Migration script handles errors and retries automatically
+- Can resume from last offset if interrupted
+
 ---
 
 ## Legacy Database (Read-Only)
