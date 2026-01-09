@@ -12,6 +12,29 @@ A white-label product verification system where brands (Fryd, Wholemelt, Dandy, 
 
 ---
 
+## Verification is Already Wired In (IMPORTANT)
+
+**Label password verification is automatic for ALL clients.** When migrating a new brand site, you do NOT need to wire up verification - it's already done!
+
+The verify pages (`/verify` and `/preview/[clientId]/verify`) automatically:
+1. Check `nfc_chips` table by client_id
+2. Check `label_password` table by client_id
+3. Handle verify_once logic (one-time codes)
+4. Log validations to `label_password_validation`
+
+**All you need to do when migrating a site:**
+- Add client to database (if not exists)
+- Add branding (colors, logo)
+- Add domain mapping
+- That's it! Verification works automatically.
+
+**Test any client's verification at:**
+```
+/preview/[clientId]/verify?code=TESTCODE
+```
+
+---
+
 ## Design Requirements (CRITICAL)
 
 ### Mobile-First Design
