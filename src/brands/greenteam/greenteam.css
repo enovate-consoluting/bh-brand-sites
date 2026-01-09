@@ -1,0 +1,295 @@
+/* Green Team Brand Styles */
+
+.greenteam-wrapper {
+  background-color: #0a0a0a;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+/* Brand font class */
+.brand-font {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* Video container */
+.greenteam-video-container {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 5rem);
+  overflow: hidden;
+}
+
+.greenteam-video-container iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 100vh;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Gradient overlay at bottom of video */
+.greenteam-video-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 12rem;
+  background: linear-gradient(to top, #000, rgba(0,0,0,0.6), transparent);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Scroll indicator */
+.greenteam-scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Liquid gradient animation */
+.greenteam-liquid-gradient {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  position: relative;
+}
+
+/* Hero section */
+.greenteam-hero {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.greenteam-hero-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 2rem 1rem;
+  position: relative;
+  z-index: 20;
+}
+
+/* Product animator */
+.greenteam-product-animator {
+  width: 300px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(3deg);
+  transition: all 0.7s ease-in-out;
+}
+
+@media (min-width: 1024px) {
+  .greenteam-product-animator {
+    width: 360px;
+    height: 500px;
+  }
+}
+
+/* Text outline effect */
+.text-outline {
+  text-shadow:
+    -1px -1px 0 rgba(0,0,0,0.3),
+    1px -1px 0 rgba(0,0,0,0.3),
+    -1px 1px 0 rgba(0,0,0,0.3),
+    1px 1px 0 rgba(0,0,0,0.3);
+}
+
+/* Feature cards */
+.greenteam-feature-card {
+  padding: 2rem;
+  background-color: #1f2937;
+  border-radius: 0.75rem;
+  border: 1px solid #374151;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.greenteam-feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 40px rgba(74, 222, 128, 0.1);
+}
+
+/* Verify button */
+.greenteam-verify-btn {
+  background-color: #4ade80;
+  color: black;
+  font-weight: 700;
+  padding: 1rem 2rem;
+  border-radius: 0.375rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+  transform: scale(1);
+}
+
+.greenteam-verify-btn:hover {
+  background-color: #22c55e;
+  transform: scale(1.05);
+}
+
+/* Age gate modal */
+.greenteam-age-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.95);
+  backdrop-filter: blur(8px);
+}
+
+.greenteam-age-gate-content {
+  background: #111827;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  padding: 2rem;
+  border-radius: 1rem;
+  max-width: 28rem;
+  width: 100%;
+  text-align: center;
+  margin: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.greenteam-age-gate-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to right, #4ade80, #3b82f6);
+}
+
+/* Verification modal */
+.greenteam-verify-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.95);
+  backdrop-filter: blur(8px);
+  padding: 1rem;
+}
+
+.greenteam-verify-modal-content {
+  background: #111827;
+  border-radius: 1rem;
+  max-width: 28rem;
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 2px solid;
+}
+
+.greenteam-verify-modal-content.success {
+  border-color: #22c55e;
+}
+
+.greenteam-verify-modal-content.error {
+  border-color: #ef4444;
+}
+
+/* Navigation */
+.greenteam-nav {
+  background: #000;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 5rem;
+}
+
+.greenteam-nav-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.greenteam-nav-logo {
+  height: 3rem;
+}
+
+@media (min-width: 768px) {
+  .greenteam-nav-logo {
+    height: 4rem;
+  }
+}
+
+.greenteam-nav-links {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .greenteam-nav-links {
+    display: flex;
+    gap: 1rem;
+    margin-left: auto;
+  }
+}
+
+.greenteam-nav-link {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  transition: background 0.3s;
+}
+
+.greenteam-nav-link:hover {
+  background: #1f2937;
+}
+
+/* Mobile menu */
+.greenteam-mobile-menu-btn {
+  display: flex;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  color: #9ca3af;
+}
+
+@media (min-width: 768px) {
+  .greenteam-mobile-menu-btn {
+    display: none;
+  }
+}
+
+.greenteam-mobile-menu-btn:hover {
+  color: white;
+  background: #1f2937;
+}

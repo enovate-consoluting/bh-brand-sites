@@ -1,6 +1,10 @@
 import type { BrandOverride, BrandAssets } from './types';
 import { frydBrand } from './fryd';
 import { heatersBrand } from './heaters';
+import { dmgBrand } from './dmg';
+import { greenteamBrand } from './greenteam';
+import { stealthyairBrand } from './stealthyair';
+import { waxxbrandzBrand } from './waxxbrandz';
 
 /**
  * Registry of all brand overrides
@@ -11,9 +15,10 @@ import { heatersBrand } from './heaters';
 const brandRegistry: Record<string, BrandOverride> = {
   fryd: frydBrand,
   heaters: heatersBrand,
-  // Add more brands as needed:
-  // wholemelt: wholemeltBrand,
-  // dandy: dandyBrand,
+  dmg: dmgBrand,
+  greenteam: greenteamBrand,
+  stealthyair: stealthyairBrand,
+  waxxbrandz: waxxbrandzBrand,
 };
 
 /**

@@ -253,6 +253,25 @@ mkdir legacy/[brand-name]
 # Place all files in legacy/[brand-name]/
 ```
 
+**FTP Access (Legacy Server):**
+```
+Host: 5.10.25.108
+User: edroot
+Tool: WinSCP (located at C:\Users\enova\AppData\Local\Programs\WinSCP\WinSCP.com)
+```
+
+**IMPORTANT - DO NOT DOWNLOAD LOG FILES**
+When downloading from FTP, exclude log files to avoid wasting time and tokens:
+```
+# WinSCP script example - download only code/images
+option exclude *.log;*/logs/*;*/Logs/*;*/inetpub/*
+get -filemask="*.cfm;*.css;*.js;*.png;*.jpg;*.gif;*.svg" /sitename.com/wwwroot/* legacy/[brand-name]/
+```
+
+**Site file structure on FTP:**
+- Files are in `[domain]/wwwroot/` subdirectory
+- Images often in `wwwroot/assets/images/` or `wwwroot/img/`
+
 #### 2. Tell Claude to Review
 Say to Claude:
 > "I've put legacy code for [Brand Name] in `legacy/[brand-name]/`. Review it and tell me if it's a standard verification site or a custom site."
@@ -472,10 +491,25 @@ Tables:
 
 ## Migration Checklist
 
-| Brand | Client ID | Domain | Type | Status |
-|-------|-----------|--------|------|--------|
-| Fryd | 2126 | authenticfryd.com | standard | in progress |
-| (add more as migrated) | | | | |
+### Status Legend
+- **in progress** - Migration started
+- **needs final review** - UI built, needs testing and verification wiring
+- **complete** - Fully migrated and tested
+
+### Brands with Custom Overrides
+| Brand | Client ID | Domain | Type | Status | Notes |
+|-------|-----------|--------|------|--------|-------|
+| Fryd | 2126 | authenticfryd.com | custom | in progress | Has age gate |
+| Heaters | 2128 | heatersofficial.com | custom | needs final review | Custom homepage |
+| DMG | 2145 | dmgbrandverify.com | custom | needs final review | Hat verification |
+| Green Team | 1990 | verifygreenteam.com | custom | needs final review | **Duplicate client: 2103** |
+| Stealthy Air | TBD | stealthyair.com | custom | needs final review | **Client NOT in DB** |
+| Waxx Brandz | 1852 | waxxbrandz.com | custom | needs final review | **Duplicate client: 2075** |
+
+### Database Issues to Resolve
+- **Green Team**: Has duplicate client records (1990 and 2103). Recommend keeping 1990 (has logo).
+- **Waxx Brandz**: Has duplicate client records (1852 and 2075). Recommend keeping 1852 (has logo).
+- **Stealthy Air**: Client not found in database - needs to be created.
 
 ---
 
@@ -501,7 +535,48 @@ The main site (`/`) uses domain detection. Use preview mode instead:
 
 ## Session Log
 
-### January 9, 2026
+### January 9, 2026 (Session 2)
+**Goal:** Migrate 5 most recent ColdFusion sites to Next.js
+
+**Sites analyzed from FTP:**
+1. **verifygreenteam.com** → Custom brand override created
+2. **dmgbrandverify.com** → Custom brand override created
+3. **stealthyair.com** → Custom brand override created (needs client in DB)
+4. **waxxbrandz.com** → Custom brand override created
+5. **verifyqualitycontrol.com** → Empty site (just `<html><body></body></html>`)
+
+**What was done:**
+- Downloaded legacy code from FTP for all 5 sites
+- Created 4 brand overrides with custom HomePage components
+- Downloaded images from FTP (Stealthy Air, Waxx Brandz)
+- Fixed image path case sensitivity issues
+- Updated brand registry with all new brands
+- Checked database for client records (found duplicates)
+- Updated documentation with FTP rules and migration status
+
+**Key files created:**
+- `src/brands/dmg/` - DMG brand override
+- `src/brands/greenteam/` - Green Team brand override
+- `src/brands/stealthyair/` - Stealthy Air brand override
+- `src/brands/waxxbrandz/` - Waxx Brandz brand override
+- `public/images/stealthyair/` - Brand images
+- `public/images/waxxbrandz/` - Brand images
+
+**Database findings:**
+- DMG: client_id 2145 (OK)
+- Green Team: DUPLICATE - client_id 1990 and 2103
+- Waxx Brandz: DUPLICATE - client_id 1852 and 2075
+- Stealthy Air: NOT FOUND - needs to be created
+
+**Next steps:**
+- Resolve duplicate client records
+- Create Stealthy Air client in database
+- Wire up verification for all brands (once, works for all)
+- Test via preview mode
+
+---
+
+### January 9, 2026 (Session 1)
 **Goal:** Set up brand override structure and preview mode
 
 **What was done:**
@@ -531,4 +606,4 @@ The main site (`/`) uses domain detection. Use preview mode instead:
 
 ---
 
-*Last updated: January 9, 2026*
+*Last updated: January 9, 2026 (Session 2)*
