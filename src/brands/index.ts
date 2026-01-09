@@ -1,5 +1,6 @@
 import type { BrandOverride, BrandAssets } from './types';
 import { frydBrand } from './fryd';
+import { heatersBrand } from './heaters';
 
 /**
  * Registry of all brand overrides
@@ -9,6 +10,7 @@ import { frydBrand } from './fryd';
  */
 const brandRegistry: Record<string, BrandOverride> = {
   fryd: frydBrand,
+  heaters: heatersBrand,
   // Add more brands as needed:
   // wholemelt: wholemeltBrand,
   // dandy: dandyBrand,

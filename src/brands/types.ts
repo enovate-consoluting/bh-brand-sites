@@ -6,6 +6,8 @@ import type { SiteConfig } from '@/types/database';
  */
 export interface BrandPageProps {
   siteConfig: SiteConfig;
+  /** Client ID for preview mode (used for verification API calls) */
+  previewClientId?: string;
 }
 
 /**

@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getSiteConfigById } from '@/lib/get-site-config-by-id';
 import { getClientSlug } from '@/types/database';
-import { getBrandAssets } from '@/brands';
+import { getBrandAssets, getBrandOverride } from '@/brands';
 import { VerifyForm } from '@/components/VerifyForm';
 
 interface PreviewPageProps {
@@ -32,7 +32,27 @@ export default async function PreviewHomePage({ params }: PreviewPageProps) {
   const { client, branding, socialLinks } = siteConfig;
   const slug = getClientSlug(client);
   const brandAssets = getBrandAssets(slug);
+  const brandOverride = getBrandOverride(slug);
 
+  // Check if brand has a custom HomePage component
+  if (brandOverride?.HomePage) {
+    const CustomHomePage = brandOverride.HomePage;
+    return (
+      <>
+        {/* Preview Banner */}
+        <div className="bg-yellow-400 text-black text-center py-2 text-sm font-medium fixed top-0 left-0 right-0 z-[100]">
+          PREVIEW MODE - {client.company_name} (ID: {clientId})
+          {' | '}
+          <Link href="/preview" className="underline">View All Clients</Link>
+        </div>
+        <div className="pt-8">
+          <CustomHomePage siteConfig={siteConfig} previewClientId={clientId} />
+        </div>
+      </>
+    );
+  }
+
+  // Default template for brands without custom components
   const backgroundColor = branding?.background_color || '#ffffff';
   const textColor = branding?.text_color || '#000000';
   const buttonColor = branding?.button_color || '#000000';

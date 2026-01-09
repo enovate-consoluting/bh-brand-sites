@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
         hostname: '*.supabase.in',
         pathname: '/storage/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'imagedelivery.net',
+      },
     ],
   },
 };
