@@ -591,7 +591,7 @@ Tables:
 
 ---
 
-## Current State (January 9, 2026)
+## Current State (January 11, 2026)
 
 ### Completed
 - ✅ Next.js 14 project with TypeScript + Tailwind
@@ -606,14 +606,28 @@ Tables:
 - ✅ Deployed to Vercel with auto-deploy
 - ✅ Verify API route (`/api/verify`)
 - ✅ Green Team enhanced with custom font and styling
+- ✅ NFC verification API (`/api/verify/nfc`) with mobile-only check
+- ✅ NFC error page matches legacy design (blinking red X)
+
+### Data Migration Status (January 11, 2026)
+
+| Table | Total Rows | Migrated | Status |
+|-------|------------|----------|--------|
+| `client` | ~2K | ~2K | ✅ Complete |
+| `nfc_tag` | 10.76M | 10.76M | ✅ Complete |
+| `label_pass_detail` | ~12K | ~12K | ✅ Complete |
+| `label_password` | 131.5M | ~57.7M | ⏳ 44% - Running |
+| `label_password_validation` | ? | 0 | ⏹️ Pending |
+| `tap_location` | new | - | ⏹️ Need to create table |
+
+**Note:** label_password migration needs keyset pagination (not OFFSET) for better performance at high row counts.
 
 ### In Progress
-- ⏳ Legacy database connection (sys admin getting credentials)
-- ⏳ Data migration (clients, NFC chips, labels)
-- ⏳ First brand migration (Fryd - authenticfryd.com)
+- ⏳ label_password migration (44% complete, ~57.7M of 131.5M rows)
 
 ### Pending
-- [ ] Wire up legacy database for verification
+- [ ] Create `tap_location` table in Supabase for NFC tap logging
+- [ ] Migrate `label_password_validation` table
 - [ ] Map authenticfryd.com domain in production
 - [ ] Test end-to-end verification flow
 - [ ] Migrate remaining standard sites
