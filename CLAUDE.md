@@ -366,7 +366,9 @@ mkdir legacy/[brand-name]
 ```
 Host: 5.10.25.108
 User: edroot
-Tool: WinSCP (located at C:\Users\enova\AppData\Local\Programs\WinSCP\WinSCP.com)
+Password: 89@3Sb0z$mUM
+Protocol: FTP (not SFTP)
+Tool: WinSCP (located at C:\Users\antho\AppData\Local\Programs\WinSCP\WinSCP.com)
 ```
 
 **IMPORTANT - DO NOT DOWNLOAD LOG FILES**
@@ -611,6 +613,8 @@ Tables:
 - ✅ 4 new brand migrations: DMG, Green Team, Stealthy Air, Waxx Brandz
 - ✅ Legacy ColdFusion code pushed to GitHub (secrets redacted)
 - ✅ FTP download workflow documented
+- ✅ Arcadia brand complete - infinite carousel, verification modals, mobile tested
+- ✅ Dynamic favicon support via generateMetadata API
 
 ---
 
@@ -722,6 +726,8 @@ Location: `scripts/`
 | Green Team | 1990 | verifygreenteam.com | custom | needs final review | Desktop and Mobile UI tested, no defects | Verification with Production labels |
 | Stealthy Air | TBD | stealthyair.com | custom | needs final review | **Client NOT in DB** | |
 | Waxx Brandz | 1852 | waxxbrandz.com | custom | needs final review | **Duplicate client: 2075** | |
+| NIMA Wellness | TBD | nimawellness.com | custom | in progress | FTP files outdated - production source unknown | Find production source files |
+| Arcadia | 2127 | TBD | custom | **complete** | Desktop and Mobile UI tested. Infinite carousel, verification modals. | Domain mapping, production codes migration |
 
 ### Skipped Domains
 | Domain | Reason | Date |
@@ -938,4 +944,133 @@ The `legacy/` folder is now pushed to GitHub (no longer gitignored) so the whole
 
 ---
 
-*Last updated: January 13, 2026 (Session 5)*
+### January 13, 2026 (Session 6)
+**Goal:** Migrate NIMA Wellness public website from ColdFusion to Next.js
+
+**Context:**
+- NIMA Wellness (nimawellness.com) is a hormone & wellness clinic in Orange County
+- Scope: PUBLIC WEBSITE ONLY - not the admin panel or booking system
+- Work done locally via debug page at `/debug-nima`
+
+**What was done:**
+- Downloaded legacy code from FTP (`/nimawellness.com/CF2023/` and `/nimawellness.com/wwwroot/`)
+- Created brand configuration: `src/brands/nimawellness/config.ts`
+- Created HomePage component: `src/brands/nimawellness/HomePage.tsx` (~1000+ lines)
+- Downloaded video assets to `public/video/nimawellness/`
+- Downloaded images to `public/images/nimawellness/`
+- Created debug page: `src/app/debug-nima/page.tsx`
+- Fixed Tailwind scanning legacy files (added `@source not` directive)
+- Switched hero video to Cloudflare Stream (local video caused memory issues)
+
+**Key discovery: FTP files are NOT the production source**
+- Production nimawellness.com has text like "Orange County's #1 Hormone & Wellness Authority"
+- This text is NOT in any FTP files (CF2023 or wwwroot folders)
+- Production is deployed from a different source (location unknown)
+- Used WebFetch to get production content directly
+
+**Brand configuration extracted:**
+```
+Primary: #0098f5 (blue)
+Secondary: #ff9b00 (yellow/orange)
+Dark: #101010
+Light: #f2f2f2
+Font: Poppins (Google Fonts)
+```
+
+**Cloudflare Stream video URLs discovered:**
+- Customer ID: `19w1a8y0iapg9msz`
+- Hero video: `https://customer-19w1a8y0iapg9msz.cloudflarestream.com/aa66c1a1403d1ae2c458968981b3fde8/iframe`
+
+**Files created:**
+- `src/brands/nimawellness/config.ts` - Colors, images, contact info
+- `src/brands/nimawellness/HomePage.tsx` - Main homepage component
+- `src/app/debug-nima/page.tsx` - Debug page for testing
+- `src/app/debug-nima-simple/page.tsx` - Simple test page
+- `public/video/nimawellness/*.mp4` - Video files (hero, fashion, testimonials)
+- `public/images/nimawellness/` - Logos, team photos, thumbnails
+- `legacy/nimawellness.com/CF2023/` - Downloaded ColdFusion source
+
+**Sections implemented (from production fetch):**
+- Hero section with Cloudflare Stream video background
+- "Our Mission" section
+- "Luxury Health & Wellness" treatment cards
+- P-Shot and O-Shot sections with benefit lists
+- "Why NIMA is Different" (4 pillars)
+- VIP Program section (5 exclusive perks)
+- Final CTA section
+- Footer with business hours
+
+**Errors fixed:**
+1. Tailwind scanning legacy `.cfm` files - added `@source not "../../legacy/**/*";` to globals.css
+2. TypeScript missing `id` property - added to mock branding in debug page
+3. Page spinning/not loading - switched to Cloudflare Stream, set video `preload="none"`
+4. File paths with spaces - renamed files to use hyphens
+
+**Blocked:**
+- Migration paused until true production source files are found
+- FTP files are outdated - manual line-by-line comparison is inefficient
+- Need to locate where production is actually deployed from
+
+**Debug URL:** http://localhost:3000/debug-nima
+
+**Status:** IN PROGRESS - Waiting for production source files
+
+---
+
+### January 13, 2026 (Session 7)
+**Goal:** Complete Arcadia brand landing page
+
+**Context:**
+- Arcadia (client_id 2127) - vape/flavor brand
+- Needed custom landing page with product showcase and verification
+
+**What was done:**
+- Implemented seamless infinite product carousel (CSS-only animation)
+- Added verification success/error modals
+- Success modal shows small Arcadia logo + "Authentic Arcadia Product"
+- Error modal shows "Not Authentic" with retry prompt
+- Added favicon support using Next.js `generateMetadata` API
+- Fixed favicon not showing (was using inline `<head>` tag which doesn't work in App Router)
+- Updated page title to just "Arcadia"
+- Tested on desktop and mobile - no defects
+- Deployed to production
+
+**Key files:**
+- `src/brands/arcadia/HomePage.tsx` - Main page component with carousel and modals
+- `src/brands/arcadia/arcadia.css` - Infinite carousel CSS animation
+- `src/brands/arcadia/config.ts` - Cloudflare CDN image URLs (logo, flavors, 20 flavor renders)
+- `src/brands/arcadia/index.ts` - Brand registration with favicon
+- `src/app/preview/[clientId]/page.tsx` - Added `generateMetadata` for dynamic favicon/title
+- `public/images/arcadia/favicon.png` - Favicon file
+
+**Carousel implementation:**
+- Pure CSS animation using `translateX(-50%)`
+- Images duplicated in DOM for seamless loop
+- 80s animation duration (desktop: 100s)
+- Pauses on hover
+- Items aligned to bottom, scale on hover
+
+**Verification status:**
+- API endpoint ready (`/api/verify`)
+- 4 batches configured in `label_pass_detail` for client 2127
+- Only test code `ARCADIA123` exists - production codes need migration
+- Data migration deferred - will coordinate with senior dev for all brands
+
+**Pending:**
+1. Get custom domain from brand owner
+2. Add domain to `client_domains` table
+3. Configure domain in Vercel
+4. Migrate production verification codes from MySQL
+
+**Preview URL:** https://bh-brand-sites.vercel.app/preview/2127
+
+**Commits:**
+- `225bdc4` - Complete Arcadia landing page with infinite carousel and verification modals
+- `26807fd` - Fix favicon using Next.js generateMetadata API
+- `5f62730` - Update page title to just brand name, fix favicon type
+
+**Status:** COMPLETE - Waiting for domain and production codes
+
+---
+
+*Last updated: January 13, 2026 (Session 7)*
