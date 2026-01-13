@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { getSiteConfigById } from '@/lib/get-site-config-by-id';
 import { getClientSlug } from '@/types/database';
 import { getBrandAssets, getBrandOverride } from '@/brands';
@@ -7,6 +8,29 @@ import { VerifyForm } from '@/components/VerifyForm';
 
 interface PreviewPageProps {
   params: Promise<{ clientId: string }>;
+}
+
+export async function generateMetadata({ params }: PreviewPageProps): Promise<Metadata> {
+  const { clientId } = await params;
+  const siteConfig = await getSiteConfigById(clientId);
+
+  if (!siteConfig) {
+    return { title: 'Client Not Found' };
+  }
+
+  const { client } = siteConfig;
+  const slug = getClientSlug(client);
+  const brandAssets = getBrandAssets(slug);
+  const displayName = slug === 'arcadia' || slug === 'lucid' ? 'Arcadia' : client.company_name;
+
+  return {
+    title: `${displayName} - Verify Your Product`,
+    icons: brandAssets.favicon ? {
+      icon: brandAssets.favicon,
+      shortcut: brandAssets.favicon,
+      apple: brandAssets.favicon,
+    } : undefined,
+  };
 }
 
 export default async function PreviewHomePage({ params }: PreviewPageProps) {
@@ -39,14 +63,6 @@ export default async function PreviewHomePage({ params }: PreviewPageProps) {
     const CustomHomePage = brandOverride.HomePage;
     return (
       <>
-        {/* Dynamic Favicon */}
-        {brandAssets.favicon && (
-          <head>
-            <link rel="icon" href={brandAssets.favicon} />
-            <link rel="shortcut icon" href={brandAssets.favicon} />
-            <link rel="apple-touch-icon" href={brandAssets.favicon} />
-          </head>
-        )}
         {/* Preview Banner */}
         <div className="bg-yellow-400 text-black text-center py-2 text-sm font-medium fixed top-0 left-0 right-0 z-[100]">
           PREVIEW MODE - {slug === 'arcadia' || slug === 'lucid' ? 'Arcadia' : client.company_name} (ID: {clientId})
