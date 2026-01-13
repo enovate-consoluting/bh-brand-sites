@@ -24,9 +24,9 @@ export async function generateMetadata({ params }: PreviewPageProps): Promise<Me
   const displayName = slug === 'arcadia' || slug === 'lucid' ? 'Arcadia' : client.company_name;
 
   return {
-    title: `${displayName} - Verify Your Product`,
+    title: displayName,
     icons: brandAssets.favicon ? {
-      icon: brandAssets.favicon,
+      icon: [{ url: brandAssets.favicon, type: 'image/png' }],
       shortcut: brandAssets.favicon,
       apple: brandAssets.favicon,
     } : undefined,
