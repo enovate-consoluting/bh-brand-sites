@@ -20,6 +20,7 @@ export const arcadiaBrand: BrandOverride = {
   assets: {
     verifySuccessIcon: arcadiaImages.verifySuccess,
     verifyFailedIcon: arcadiaImages.verifyFailed,
+    favicon: '/images/arcadia/favicon.png',
   },
   HomePage: ArcadiaHomePage,
 };

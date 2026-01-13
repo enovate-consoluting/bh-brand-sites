@@ -39,6 +39,14 @@ export default async function PreviewHomePage({ params }: PreviewPageProps) {
     const CustomHomePage = brandOverride.HomePage;
     return (
       <>
+        {/* Dynamic Favicon */}
+        {brandAssets.favicon && (
+          <head>
+            <link rel="icon" href={brandAssets.favicon} />
+            <link rel="shortcut icon" href={brandAssets.favicon} />
+            <link rel="apple-touch-icon" href={brandAssets.favicon} />
+          </head>
+        )}
         {/* Preview Banner */}
         <div className="bg-yellow-400 text-black text-center py-2 text-sm font-medium fixed top-0 left-0 right-0 z-[100]">
           PREVIEW MODE - {slug === 'arcadia' || slug === 'lucid' ? 'Arcadia' : client.company_name} (ID: {clientId})

@@ -8,9 +8,12 @@
 export const arcadiaImages = {
   // Logo - main brand logo for hero section
   logo: 'https://imagedelivery.net/ofaxELKSbhOGL0thW-m_ww/619f5a96-cb03-46e3-9b2a-a2c351c24600/public',
+
+  // Small logo - used in verification success modal
+  logoSmall: 'https://imagedelivery.net/ofaxELKSbhOGL0thW-m_ww/c94c797a-5ac7-42fb-1f0a-71099f25f000/public',
   
   // Flavors image - displayed above product section
-  flavors: 'https://imagedelivery.net/ofaxELKSbhOGL0thW-m_ww/85bcee6c-46b1-4af6-7b8a-a8a394868f00/public',
+  flavors: 'https://imagedelivery.net/ofaxELKSbhOGL0thW-m_ww/9c9b2fa0-d25e-4e46-452f-4c6e1a1cd400/public',
   
   // Flavor renders - carousel images
   flavorRenders: [

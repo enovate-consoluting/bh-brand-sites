@@ -63,6 +63,11 @@ export function ArcadiaHomePage({ siteConfig, previewClientId }: BrandPageProps)
   // Product images - filter out placeholder URLs (legacy, may not be used)
   const productImages = arcadiaImages.products.filter(url => !isPlaceholderUrl(url));
 
+  // Small logo for success modal
+  const smallLogoUrl = arcadiaImages.logoSmall && !isPlaceholderUrl(arcadiaImages.logoSmall)
+    ? arcadiaImages.logoSmall
+    : null;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -217,7 +222,7 @@ export function ArcadiaHomePage({ siteConfig, previewClientId }: BrandPageProps)
       <section className="w-full px-4 py-6 md:py-8 flex-1" style={{ color: '#ffffff' }}>
         <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
           {flavorsImage && (
-            <div className="mb-6 md:mb-8 text-center w-full">
+            <div className="mb-2 md:mb-3 text-center w-full">
               <Image
                 src={flavorsImage}
                 alt="Flavors"
@@ -228,23 +233,34 @@ export function ArcadiaHomePage({ siteConfig, previewClientId }: BrandPageProps)
               />
             </div>
           )}
-          
-          {/* Flavor Renders Grid */}
+
+          {/* Infinite Flavor Carousel */}
           {flavorRenders.length > 0 && (
-            <div className="w-full max-w-4xl mx-auto -mt-4 md:-mt-5">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 px-4">
+            <div className="arcadia-infinite-carousel w-full">
+              <div className="arcadia-carousel-track">
+                {/* First set of images */}
                 {flavorRenders.map((img, idx) => (
-                  <div 
-                    key={idx} 
-                    className="flex items-center justify-center"
-                  >
+                  <div key={`first-${idx}`} className="arcadia-carousel-item">
                     <Image
                       src={img}
                       alt={`Flavor ${idx + 1}`}
-                      width={250}
-                      height={375}
-                      className="w-full max-w-[250px] h-auto rounded-lg object-contain"
-                      sizes="(max-width: 768px) 200px, 250px"
+                      width={220}
+                      height={330}
+                      className="w-full h-auto"
+                      sizes="(max-width: 640px) 180px, (max-width: 1024px) 200px, 220px"
+                    />
+                  </div>
+                ))}
+                {/* Duplicate set for seamless loop */}
+                {flavorRenders.map((img, idx) => (
+                  <div key={`second-${idx}`} className="arcadia-carousel-item">
+                    <Image
+                      src={img}
+                      alt={`Flavor ${idx + 1}`}
+                      width={220}
+                      height={330}
+                      className="w-full h-auto"
+                      sizes="(max-width: 640px) 180px, (max-width: 1024px) 200px, 220px"
                     />
                   </div>
                 ))}
@@ -299,27 +315,23 @@ export function ArcadiaHomePage({ siteConfig, previewClientId }: BrandPageProps)
                     </svg>
                   </div>
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-green-400 mb-3">
-                  Valid Product
-                </h3>
-                {logoUrl && (
+                {smallLogoUrl && (
                   <div className="mb-4">
                     <Image
-                      src={logoUrl}
+                      src={smallLogoUrl}
                       alt={companyName}
-                      width={100}
-                      height={100}
-                      className="mx-auto rounded-lg"
-                      unoptimized={logoUrl?.endsWith('.gif')}
+                      width={120}
+                      height={120}
+                      className="mx-auto"
                     />
                   </div>
                 )}
-                <p className="text-white text-base md:text-lg mb-2">
-                  {message}
-                </p>
+                <h3 className="text-2xl md:text-3xl font-bold text-green-400 mb-3">
+                  Authentic {companyName} Product
+                </h3>
                 {serial && (
                   <p className="text-white/70 text-sm md:text-base">
-                    Serial# {serial}
+                    Code: {serial}
                   </p>
                 )}
                 <button
@@ -354,10 +366,13 @@ export function ArcadiaHomePage({ siteConfig, previewClientId }: BrandPageProps)
                   </div>
                 </div>
                 <h3 className="text-2xl md:text-3xl font-bold text-red-400 mb-3">
-                  Not Valid Product
+                  Not Authentic
                 </h3>
                 <p className="text-white/80 text-sm md:text-base mb-4 px-2">
-                  {message}
+                  Code not found or already used.
+                </p>
+                <p className="text-white/60 text-sm mb-2">
+                  Please check your code and try again.
                 </p>
                 <button
                   onClick={closeModal}
