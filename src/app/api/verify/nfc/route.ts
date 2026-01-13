@@ -51,6 +51,15 @@ function decryptTagId(encryptedId: string): number | null {
 }
 
 /**
+ * Check if User-Agent is from a mobile device (Android or iOS)
+ * NFC tags must be tapped from a phone - desktop browsers are rejected
+ */
+function isMobileDevice(userAgent: string): boolean {
+  const ua = userAgent.toLowerCase();
+  return ua.includes('android') || ua.includes('iphone') || ua.includes('ipad');
+}
+
+/**
  * Get geolocation data from IP (using ip-api.com - free, no key needed)
  */
 async function getGeolocation(ip: string): Promise<Record<string, unknown> | null> {
@@ -144,6 +153,15 @@ export async function GET(request: NextRequest): Promise<NextResponse<NFCVerific
              headersList.get('x-real-ip') ||
              '0.0.0.0';
   const userAgent = headersList.get('user-agent') || '';
+
+  // Check if request is from a mobile device (NFC must be tapped from phone)
+  if (!isMobileDevice(userAgent)) {
+    return NextResponse.json({
+      valid: false,
+      message: 'This NFC product is NOT AUTHENTIC! This link is unique to one NFC chip that has been compromised and currently has been discontinued.',
+      error: 'NOT_MOBILE_DEVICE',
+    });
+  }
 
   // No ID provided
   if (!encryptedId) {
