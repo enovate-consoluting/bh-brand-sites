@@ -5,6 +5,7 @@ import { dmgBrand } from './dmg';
 import { greenteamBrand } from './greenteam';
 import { stealthyairBrand } from './stealthyair';
 import { waxxbrandzBrand } from './waxxbrandz';
+import { arcadiaBrand } from './arcadia';
 
 /**
  * Registry of all brand overrides
@@ -20,6 +21,8 @@ const brandRegistry: Record<string, BrandOverride> = {
   green: greenteamBrand, // Alias: "Green Team" -> "green" (first word only)
   stealthyair: stealthyairBrand,
   waxxbrandz: waxxbrandzBrand,
+  arcadia: arcadiaBrand,
+  lucid: arcadiaBrand, // Alias: Client 2127 uses "LUCID" company name -> "lucid" slug
 };
 
 /**

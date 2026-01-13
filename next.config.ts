@@ -17,6 +17,14 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'imagedelivery.net',
       },
+      {
+        protocol: 'https',
+        hostname: '*.cloudflare.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.cloudflareusercontent.com',
+      },
     ],
   },
 };

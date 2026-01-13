@@ -41,11 +41,11 @@ export default async function PreviewHomePage({ params }: PreviewPageProps) {
       <>
         {/* Preview Banner */}
         <div className="bg-yellow-400 text-black text-center py-2 text-sm font-medium fixed top-0 left-0 right-0 z-[100]">
-          PREVIEW MODE - {client.company_name} (ID: {clientId})
+          PREVIEW MODE - {slug === 'arcadia' || slug === 'lucid' ? 'Arcadia' : client.company_name} (ID: {clientId})
           {' | '}
           <Link href="/preview" className="underline">View All Clients</Link>
         </div>
-        <div className="pt-8">
+        <div className="pt-8" style={{ backgroundColor: 'transparent' }}>
           <CustomHomePage siteConfig={siteConfig} previewClientId={clientId} />
         </div>
       </>
