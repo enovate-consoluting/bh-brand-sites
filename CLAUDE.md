@@ -726,7 +726,7 @@ Location: `scripts/`
 | Green Team | 1990 | verifygreenteam.com | custom | needs final review | Desktop and Mobile UI tested, no defects | Verification with Production labels |
 | Stealthy Air | TBD | stealthyair.com | custom | needs final review | **Client NOT in DB** | |
 | Waxx Brandz | 1852 | waxxbrandz.com | custom | needs final review | **Duplicate client: 2075** | |
-| NIMA Wellness | TBD | nimawellness.com | custom | in progress | FTP files outdated - production source unknown | Find production source files |
+| NIMA Wellness | TBD | nimawellness.com | custom | in progress | Treatment carousels complete, UI polish done. Awaiting text comparison with production screenshots. | Text verification, mobile testing, deploy |
 | Arcadia | 2127 | TBD | custom | **complete** | Desktop and Mobile UI tested. Infinite carousel, verification modals. | Domain mapping, production codes migration |
 
 ### Skipped Domains
@@ -1073,4 +1073,67 @@ Font: Poppins (Google Fonts)
 
 ---
 
-*Last updated: January 13, 2026 (Session 7)*
+### January 15-16, 2026 (Session 8)
+**Goal:** Continue NIMA Wellness migration - implement treatment carousels and UI polish
+
+**Context:**
+- Continuing from Session 6 where basic structure was created
+- Decided to proceed with production content comparison via screenshots instead of relying on FTP files
+
+**What was done:**
+
+**Treatment Carousel Implementation:**
+- Implemented true infinite loop carousel with cloned slides at both ends
+- Layout: `[clone of last] + [all real slides] + [clone of first]`
+- Seamless transition using `transitionend` event listener with instant jumps
+- Direct DOM manipulation via refs to avoid React re-render timing issues
+- Autoplay at 2000ms intervals (matches production)
+- Single-slide tabs handled separately (no clones needed)
+
+**Treatment Tabs Completed:**
+1. **Hormone Replacement Therapy** - Single slide with TRT/BHRT info
+2. **Treatment By Age** - 4 slides (30s, 40s, 50s, 60s) with age badge overlay
+3. **Erectile Dysfunction** - Single slide with comprehensive ED solutions
+4. **Anti-Aging** - 3 slides (Non-Surgical, Laser, Peptides/NAD+)
+5. **Body Sculpting** - Single slide with all body contouring treatments
+6. **Medical Weight Loss** - Single slide with GLP-1/GIP programs
+7. **Sexual Health** - 2 slides (P-Shot™ and O-Shot™) with "Perfect For" sections
+
+**UI Polish:**
+- Fixed Learn More button styling (filled blue, not outline)
+- Fixed button text weight (400 instead of 500)
+- Fixed button shadow clipping with container padding (`pb-4`)
+- Fixed P-Shot image cropping with `object-position: top center`
+- Changed carousel arrows from ← → to < > chevrons
+- Fixed arrow direction (left points left, right points right)
+- Added polymorphic handling for `learnMore` (string or object format)
+
+**Key Technical Decisions:**
+- Use `slideIndexRef` (useRef) instead of state to track position - avoids re-render timing issues
+- Clone slides in DOM for seamless infinite loop
+- Instant jump (no transition) when reaching clone boundaries
+- `requestAnimationFrame` double-wrap for smooth jump timing
+
+**Files modified:**
+- `src/brands/nimawellness/HomePage.tsx` - All treatment data and carousel logic (~1300 lines)
+- `src/brands/nimawellness/nimawellness.css` - Button styles, arrow positioning, image fit
+
+**CSS Classes Added:**
+- `.nima-btn-primary` / `.nima-btn-secondary` - Filled blue buttons with shadow
+- `.nima-perfect-for` - Styled callout box for Sexual Health slides
+- `.nima-slider-arrows` - Positioned at carousel edges
+- `.nima-treatment-slide .nima-slide-thumb img` - `object-position: top center`
+
+**Next Steps:**
+1. Compare treatment card text with production screenshots (user will provide)
+2. Fix any text discrepancies found
+3. Final mobile testing
+4. Register brand and deploy
+
+**Debug URL:** http://localhost:3000/debug-nima (or port 3002 if 3000 in use)
+
+**Status:** IN PROGRESS - Awaiting production screenshots for text comparison
+
+---
+
+*Last updated: January 16, 2026 (Session 8)*

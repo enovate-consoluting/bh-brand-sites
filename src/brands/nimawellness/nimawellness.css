@@ -1,0 +1,864 @@
+/**
+ * NIMA Wellness Custom Styles
+ * Newport Integrative Medicine & Aesthetics
+ *
+ * Brand colors:
+ * - Primary: #0098f5 (blue)
+ * - Secondary: #ff9b00 (yellow/orange)
+ * - Dark: #101010
+ * - Light: #f2f2f2
+ */
+
+/* Import Poppins font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+/* CSS Variables */
+:root {
+  --nima-primary: #0098f5;
+  --nima-secondary: #ff9b00;
+  --nima-dark: #101010;
+  --nima-light: #f2f2f2;
+  --nima-paragraph: #444444;
+  --nima-white: #ffffff;
+  --nima-border: #dddddd;
+}
+
+/* Base wrapper */
+.nima-wrapper {
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.nima-wrapper * {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Top bar */
+.nima-topbar {
+  background: rgba(0, 152, 245, 0.5);
+}
+
+.nima-topbar a {
+  color: white;
+  text-decoration: none;
+  transition: opacity 0.3s;
+}
+
+.nima-topbar a:hover {
+  opacity: 0.8;
+}
+
+/* Navigation */
+.nima-nav {
+  background: transparent;
+  position: relative;
+}
+
+/* Hero Section */
+.nima-hero {
+  position: relative;
+}
+
+.nima-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0, 78, 124, 0.9), rgba(0, 198, 192, 0.7));
+  z-index: 1;
+}
+
+/* Section divider - matches legacy design */
+.nima-divider {
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--nima-paragraph);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.nima-divider::before,
+.nima-divider::after {
+  content: '';
+  width: 100px;
+  height: 1px;
+  background: var(--nima-border);
+}
+
+/* Right-aligned divider - line on left only, text on right */
+.nima-divider-right {
+  justify-content: flex-end !important;
+}
+
+.nima-divider-right::after {
+  display: none;
+}
+
+/* Info Cards - Signature Programs (matching production exactly) */
+.nima-infoCard {
+  width: 100%;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  height: 270px;
+  transition: all 0.4s ease-in-out;
+  cursor: pointer;
+}
+
+.nima-infoCard:hover {
+  transform: translateY(-10px);
+}
+
+.nima-infoCard .nima-infoCardImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.4s ease-in-out;
+}
+
+.nima-infoCard:hover .nima-infoCardImg {
+  filter: brightness(0.5);
+}
+
+/* Animated border container */
+.nima-infoCardContentInfo {
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Animated border pseudo-elements */
+.nima-infoCardContentInfo::before,
+.nima-infoCardContentInfo::after,
+.nima-infoCardContent::before,
+.nima-infoCardContent::after {
+  content: "";
+  position: absolute;
+  transition: all 0.5s ease;
+  background: white;
+  z-index: 1;
+}
+
+.nima-infoCardContentInfo::before {
+  left: 0;
+  top: 0;
+  height: 0;
+  width: 1px;
+}
+
+.nima-infoCardContentInfo::after {
+  right: 0;
+  bottom: 0;
+  height: 0;
+  width: 1px;
+}
+
+.nima-infoCardContent::before {
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 0;
+}
+
+.nima-infoCardContent::after {
+  top: 0;
+  right: 0;
+  height: 1px;
+  width: 0;
+}
+
+/* Animate borders on hover */
+.nima-infoCard:hover .nima-infoCardContentInfo::before,
+.nima-infoCard:hover .nima-infoCardContentInfo::after {
+  height: 100%;
+}
+
+.nima-infoCard:hover .nima-infoCardContent::before,
+.nima-infoCard:hover .nima-infoCardContent::after {
+  width: 100%;
+}
+
+.nima-infoCardContent {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Content box that fades in */
+.nima-contentBox {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(3px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease-in-out;
+  transition-delay: 0.1s;
+}
+
+.nima-infoCard:hover .nima-contentBox {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.nima-contentBox h6 {
+  font-size: 16px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.nima-contentBox ul {
+  text-align: left;
+  font-size: 14px;
+  list-style: disc;
+  padding-left: 20px;
+}
+
+.nima-contentBox ul li {
+  margin-bottom: 4px;
+}
+
+/* Theme Button - matches legacy .ThemeBtn */
+.nima-btn-primary {
+  border: 0;
+  padding: 8px 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  border-radius: 24px;
+  background: var(--nima-primary);
+  font-size: 16px;
+  font-weight: 400;
+  color: white;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.nima-btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  color: white;
+}
+
+/* Treatment Cards */
+.nima-treatCard {
+  cursor: pointer;
+}
+
+.nima-treatCard img {
+  transition: transform 0.5s ease;
+}
+
+.nima-treatCard:hover img {
+  transform: scale(1.1);
+}
+
+/* Theme Button - matches legacy .ThemeBtn */
+.nima-btn-primary {
+  border: 0;
+  padding: 8px 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  border-radius: 24px;
+  background: var(--nima-primary);
+  font-size: 16px;
+  font-weight: 400;
+  color: white;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.nima-btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  color: white;
+}
+
+/* Secondary Button - filled style for "Learn More" - matches production */
+.nima-btn-secondary {
+  border: 0;
+  padding: 8px 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  border-radius: 24px;
+  background: var(--nima-primary);
+  font-size: 16px;
+  font-weight: 400;
+  color: white;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.nima-btn-secondary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  color: white;
+}
+
+/* Perfect For section - Sexual Health slides */
+.nima-perfect-for {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: rgba(0, 152, 245, 0.08);
+  border-left: 3px solid var(--nima-primary);
+  border-radius: 0 8px 8px 0;
+}
+
+.nima-perfect-for strong {
+  display: block;
+  color: var(--nima-primary);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.nima-perfect-for p {
+  color: #555;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Popular Treatments - Tab Navigation - matches production .treatment-nav */
+.nima-treatment-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nima-treatment-nav-btn {
+  width: 100%;
+  text-align: left;
+  padding: 10px 15px;
+  background: var(--nima-white);
+  color: var(--nima-dark);
+  border: 1px solid var(--nima-border);
+  border-radius: 5px;
+  min-width: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.nima-treatment-nav-btn::after {
+  content: "›";
+  font-size: 24px;
+  transition: all 0.3s ease-in-out;
+  opacity: 1;
+  color: var(--nima-dark);
+}
+
+.nima-treatment-nav-btn:hover,
+.nima-treatment-nav-btn.active {
+  background: var(--nima-primary);
+  color: var(--nima-white);
+  box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--nima-primary);
+}
+
+.nima-treatment-nav-btn:hover::after,
+.nima-treatment-nav-btn.active::after {
+  opacity: 1;
+  transform: translateX(5px);
+  color: var(--nima-white);
+}
+
+/* Popular Treatment Section Layout */
+.nima-treatment-wrapper {
+  display: flex;
+  gap: 20px;
+}
+
+/* Treatment Content Area - matches production .treatmentResult */
+.nima-treatment-content {
+  flex: 1;
+  height: 100%;
+  padding: 0 50px;
+}
+
+/* Treatment Slider Content - matches production .treatmentSlider-content */
+.nima-treatment-slide {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  height: 100%;
+  /* No margin - slides must be exactly 100% width for seamless infinite loop */
+  /* Spacing is handled by internal padding instead */
+  box-sizing: border-box;
+  padding-right: 45px;
+}
+
+.nima-treatment-slide .nima-slide-thumb {
+  width: 35%;
+  min-width: 35%;
+  flex-shrink: 0;
+  max-height: 330px;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 1;
+}
+
+.nima-treatment-slide .nima-slide-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* Age Label Badge - circular like production */
+.nima-age-label {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: var(--nima-primary);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px;
+  border-radius: 100%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Treatment Slide Info - matches production .sliderContentInfo */
+.nima-slide-info {
+  width: 100%;
+  text-align: left;
+}
+
+/* secHead wrapper inside slide info */
+.nima-slide-info .nima-secHead {
+  margin-bottom: 15px;
+}
+
+.nima-slide-info .nima-secHead h4 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  line-height: 1.3;
+}
+
+.nima-slide-info .nima-secHead h6 {
+  font-size: 16px;
+  color: var(--nima-primary);
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* List with triangle markers (disclosure-closed) - matches production */
+.nima-slide-info ul {
+  list-style-type: disclosure-closed;
+  padding-left: 20px;
+  margin: 0 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.nima-slide-info ul li {
+  font-size: 14px;
+  color: var(--nima-paragraph);
+  line-height: 1.5;
+}
+
+.nima-slide-info ul li::marker {
+  color: var(--nima-primary);
+}
+
+/* Slider Navigation Arrows - matches production .sliderArrows */
+.nima-slider-arrows {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.nima-slider-arrow {
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  background: var(--nima-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  color: white;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  pointer-events: auto;
+}
+
+.nima-slider-arrow:hover {
+  background: var(--nima-secondary);
+}
+
+.nima-slider-arrow:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Responsive - stack on mobile */
+@media (max-width: 1023px) {
+  .nima-treatment-wrapper {
+    flex-direction: column;
+  }
+
+  .nima-treatment-content {
+    padding: 0 0 50px;
+  }
+
+  .nima-treatment-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    min-width: 100%;
+  }
+
+  .nima-treatment-nav-btn {
+    flex: 1 1 auto;
+    min-width: fit-content;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .nima-treatment-nav-btn::after {
+    display: none;
+  }
+
+  .nima-treatment-slide {
+    flex-direction: column;
+    margin-right: 0;
+  }
+
+  .nima-treatment-slide .nima-slide-thumb {
+    width: 100%;
+    min-width: 100%;
+    max-height: none;
+    aspect-ratio: 16/9;
+  }
+}
+
+/* Quiz Section - matches production .QuizeSection */
+.nima-quiz-section {
+  background: var(--nima-light);
+  overflow: hidden;
+}
+
+.nima-quiz-container {
+  text-align: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  height: 400px;
+  cursor: pointer;
+}
+
+@media (min-width: 1024px) {
+  .nima-quiz-container {
+    height: 450px;
+  }
+}
+
+.nima-quiz-img {
+  width: 100%;
+  filter: grayscale(1) brightness(0.5);
+  transition: all 0.6s ease-in-out;
+  object-fit: cover;
+  object-position: top;
+}
+
+.nima-quiz-container:hover .nima-quiz-img {
+  transform: scale(1.15);
+  filter: grayscale(0);
+}
+
+.nima-quiz-text {
+  z-index: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* About Section - matches production */
+.nima-about-description {
+  border: 1px solid var(--nima-border);
+  padding: 30px;
+  border-radius: 10px;
+  color: var(--nima-paragraph);
+}
+
+.nima-about-description p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.nima-about-description p:last-child {
+  margin-bottom: 0;
+}
+
+/* Studio Section */
+.nima-studio {
+  position: relative;
+}
+
+/* Footer */
+.nima-footer {
+  background: #111827;
+}
+
+/* Service cards hover */
+.nima-wrapper .bg-white {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nima-wrapper .bg-white:hover {
+  transform: translateY(-2px);
+}
+
+/* Verification input focus */
+.nima-wrapper input:focus {
+  box-shadow: 0 0 0 3px rgba(0, 152, 245, 0.2);
+}
+
+/* Section scroll margin for fixed header */
+.nima-section {
+  scroll-margin-top: 80px;
+}
+
+/* Animations */
+@keyframes nima-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 152, 245, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(0, 152, 245, 0);
+  }
+}
+
+.nima-pulse {
+  animation: nima-pulse 2s infinite;
+}
+
+/* Modal animations */
+.nima-wrapper .fixed {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.nima-wrapper .fixed > div {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading spinner */
+.nima-spinner {
+  border: 3px solid var(--nima-light);
+  border-top-color: var(--nima-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .nima-hero {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .nima-nav {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .nima-divider {
+    font-size: 12px;
+    letter-spacing: 3px;
+  }
+
+  .nima-divider::before,
+  .nima-divider::after {
+    width: 40px;
+  }
+}
+
+/* Gradient text effect */
+.nima-gradient-text {
+  background: linear-gradient(135deg, var(--nima-primary), #00c6c0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card hover effects */
+.nima-card-hover {
+  transition: all 0.3s ease;
+}
+
+.nima-card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Custom scrollbar */
+.nima-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.nima-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.nima-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--nima-primary);
+  border-radius: 3px;
+}
+
+.nima-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #007acc;
+}
+
+/* Link hover underline effect */
+.nima-link-hover {
+  position: relative;
+}
+
+.nima-link-hover::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--nima-primary);
+  transition: width 0.3s ease;
+}
+
+.nima-link-hover:hover::after {
+  width: 100%;
+}
+
+/* Marquee Animation for partner logos */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+/* Font class for Poppins */
+.font-poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+.font-poppins * {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* NIMA Homepage specific styles */
+.nima-homepage {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Modal fade in animation */
+.animate-fadeIn {
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
