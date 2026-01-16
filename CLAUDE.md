@@ -12,7 +12,137 @@ A white-label product verification system where brands (Fryd, Wholemelt, Dandy, 
 
 ---
 
-## Verification is Already Wired In (IMPORTANT)
+## 🚨 CENTRAL API - api.birdhausapp.com (January 16, 2026)
+
+**All verification now goes through the central API gateway.**
+
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `https://api.birdhausapp.com/api/verify/label` | POST | Verify label password codes |
+| `https://api.birdhausapp.com/api/verify/nfc` | POST | Verify NFC chips |
+| `https://api.birdhausapp.com/api/health` | GET | Health check |
+
+### Security Features (Already Active)
+- **CORS** - Only whitelisted domains can call the API
+- **Rate Limiting** - 100 requests/minute per IP
+- **No API key needed** for `/api/verify/*` endpoints (CORS protects them)
+
+### For NEW Sites (Not Using bh-brand-sites Shared Code)
+
+If you're building a standalone site that needs verification, use this pattern:
+
+#### Step 1: Create Server-Side API Route
+
+```typescript
+// src/app/api/verify-label/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function POST(request: NextRequest) {
+  const { code, clientId } = await request.json();
+
+  const response = await fetch('https://api.birdhausapp.com/api/verify/label', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code, client_id: clientId }),
+  });
+
+  const result = await response.json();
+  return NextResponse.json(result);
+}
+```
+
+#### Step 2: Create Frontend Form
+
+```tsx
+// src/components/VerifyForm.tsx
+'use client';
+import { useState } from 'react';
+
+export function VerifyForm({ clientId }: { clientId: number }) {
+  const [code, setCode] = useState('');
+  const [result, setResult] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const res = await fetch('/api/verify-label', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, clientId }),
+    });
+
+    const data = await res.json();
+    setResult(data);
+    setLoading(false);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={code}
+        onChange={(e) => setCode(e.target.value)}
+        placeholder="Enter verification code"
+        className="border p-2 rounded"
+      />
+      <button type="submit" disabled={loading} className="bg-blue-500 text-white p-2 rounded ml-2">
+        {loading ? 'Verifying...' : 'Verify'}
+      </button>
+
+      {result && (
+        <div className={`mt-4 p-4 rounded ${result.valid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+          <p className="font-bold">{result.valid ? '✓ AUTHENTIC' : '✗ NOT VERIFIED'}</p>
+          <p>{result.message}</p>
+          {result.serial && <p className="text-sm">Serial: {result.serial}</p>}
+        </div>
+      )}
+    </form>
+  );
+}
+```
+
+#### API Response Format
+
+**Success:**
+```json
+{
+  "valid": true,
+  "message": "Authentic product",
+  "serial": "ABC123",
+  "client": { "client_id": 2058, "name": "Dandy" }
+}
+```
+
+**Failure:**
+```json
+{
+  "valid": false,
+  "message": "Code not found. This product may not be authentic."
+}
+```
+
+**Already Verified (one-time code):**
+```json
+{
+  "valid": false,
+  "alreadyVerified": true,
+  "message": "This code has already been validated."
+}
+```
+
+### Adding New Domains to CORS Whitelist
+
+If your new site's domain isn't whitelisted, add it to:
+- **File:** `api-birdhaus/src/middleware.ts`
+- **Array:** `ALLOWED_ORIGINS`
+
+Then push to GitHub - Vercel auto-deploys.
+
+---
+
+## Verification is Already Wired In (For Sites Using This Codebase)
 
 **Label password verification is automatic for ALL clients.** When migrating a new brand site, you do NOT need to wire up verification - it's already done!
 
@@ -758,6 +888,249 @@ The main site (`/`) uses domain detection. Use preview mode instead:
 ### Changes not deploying
 - Check GitHub push succeeded
 - Check Vercel dashboard for build errors
+
+---
+
+## Legacy DB Supabase Migration (ACTIVE - January 15, 2026)
+
+### Current Status: FIXING IMPORT SCRIPT (Jan 15, 2026 ~9:30 AM)
+
+**Import stalled on `label_password` table due to MySQL boolean format issues.**
+
+#### Progress Before Stall (08:15 AM)
+| Table | Rows Imported |
+|-------|---------------|
+| activity | 25,793,019 ✅ |
+| activity_location | 21,494,140 ✅ |
+| customer_support | 39,411 ✅ |
+| coordinates | 23,584 ✅ |
+| bbsimon_orders | 4,168 ✅ |
+| client_login | 1,984 ✅ |
+| lab_test_label_assoc | 1,458 ✅ |
+| contact_us | 319 ✅ |
+| lab_test_result | 295 ✅ |
+| label_city_tap_data | 250 ✅ |
+| besos_inquiries | 149 ✅ |
+| client_product | 67 ✅ |
+| conversation_participants_waxx_app | 29 ✅ |
+| inventory_location | 22 ✅ |
+| + other small tables | Various ✅ |
+
+**Tables created:** 148 of 147 (all created)
+**Tables with data:** ~20+ tables populated
+**Stalled on:** `label_password` (131M rows expected)
+
+#### Error That Caused Stall
+```
+Insert error: invalid input syntax for type boolean: "\0"
+Insert error: syntax error at or near "\"
+```
+
+**Root cause:** MySQL stores booleans as `\0` (false) and `\1` (true). PostgreSQL doesn't understand this format.
+
+#### Fix Applied
+Updated `scripts/import-mysql-to-supabase.js` to convert MySQL boolean literals to PostgreSQL format.
+
+#### Import Restarted (Jan 15, 2026 ~9:45 AM)
+- Dropped old legacy schema (had partial data with errors)
+- Restarted import with fixed script
+- **Log file:** `scripts/import-log-run2.txt`
+- Hit second error on `label_password`: MySQL BIT columns weren't mapped to BOOLEAN
+
+#### Second Fix & Restart (Jan 15, 2026 ~10:15 AM)
+- Added `bit` and `bit(n)` -> BOOLEAN mapping to type conversion
+- Dropped schema again, restarted fresh
+- **Log file:** `scripts/import-log-run3.txt`
+- **Issue:** Statement timeouts caused data loss on large tables
+
+#### Third Fix & Restart - RUN 4 (Jan 15, 2026 ~11:30 AM)
+- Added 5-minute statement timeout in connection config
+- Reduced batch size from 100 to 50
+- Added retry logic (3 retries with exponential backoff)
+- More frequent logging (every 500 rows)
+- **Log file:** `scripts/import-log-run4.txt`
+- **CRASHED:** Connection terminated, Supabase went into RESIZING mode (auto-scaling)
+
+#### Auto-Restart Script Running (Jan 15, 2026 ~11:45 AM)
+- Created `scripts/start-import.bat` that waits for Supabase and auto-starts import
+- Script polls every 60 seconds until Supabase is back
+- **Log file when it starts:** `scripts/import-log-run5.txt`
+- **User away for 8 hours**
+
+---
+
+### IF YOU NEED TO SHUT DOWN / COME BACK
+
+**The import runs independently of Claude.** It's a Node.js process running in the background.
+
+#### To Check If Import Is Still Running:
+```bash
+# In any terminal:
+tasklist | findstr node
+
+# Look for a node.exe using lots of memory (500MB+) - that's the import
+```
+
+#### To Check Progress:
+```bash
+# Option 1: Check the log file
+cd C:\Users\enova\projects\bh-brand-sites\bh-brand-sites
+tail -50 scripts/import-log-run3.txt
+
+# Option 2: Query Supabase directly (use SQL Editor in dashboard)
+SELECT SUM(n_live_tup) as total_rows FROM pg_stat_user_tables WHERE schemaname = 'legacy';
+```
+
+#### Expected Row Counts (for reference):
+| Table | Expected Rows |
+|-------|---------------|
+| label_password | ~131,500,000 |
+| label_password_validation | ~100,000,000 |
+| activity | ~26,000,000 |
+| activity_location | ~21,500,000 |
+| nfc_tag | ~10,700,000 |
+| **TOTAL** | **~300,000,000** |
+
+#### If Import Crashed / Need to Restart:
+```bash
+# 1. Make sure WARP is ON (check system tray, bottom right)
+# 2. Open terminal in project folder:
+cd C:\Users\enova\projects\bh-brand-sites\bh-brand-sites
+
+# 3. Check if partially imported (optional):
+# Go to Supabase dashboard -> SQL Editor -> Run:
+# SELECT COUNT(*) FROM pg_stat_user_tables WHERE schemaname = 'legacy';
+
+# 4. If you need a CLEAN restart (drop all and start over):
+# In Supabase SQL Editor: DROP SCHEMA IF EXISTS legacy CASCADE;
+
+# 5. Start the import:
+node scripts/import-mysql-to-supabase.js 2>&1 | tee scripts/import-log-run4.txt
+```
+
+#### Key Files:
+| File | Purpose |
+|------|---------|
+| `scripts/import-mysql-to-supabase.js` | The import script |
+| `scripts/import-log-run3.txt` | Current run's log |
+| `C:/Users/enova/OneDrive/Desktop/scanacart_1_12_26/scanacart_1_12_26.sql` | Source MySQL dump (44GB) |
+
+#### Supabase Credentials:
+| Item | Value |
+|------|-------|
+| Project | Legacy DB |
+| Project ID | `hanemjoomxmyfbxrdbot` |
+| Dashboard | https://supabase.com/dashboard/project/hanemjoomxmyfbxrdbot |
+| DB Host | `db.hanemjoomxmyfbxrdbot.supabase.co` |
+| DB Password | `x8RTBR6by#4EYLk` |
+| Schema | `legacy` (will move to `public` after complete) |
+
+#### WARP Must Be ON:
+- Supabase direct connection requires IPv6
+- WARP provides IPv6 on your network
+- Icon in system tray (bottom right near clock)
+- If disconnected: Click icon -> Toggle ON
+
+---
+
+### What's Happening
+
+We're importing the 44GB MySQL dump (`scanacart_1_12_26.sql`) into a new Supabase project called "Legacy DB".
+
+| Item | Value |
+|------|-------|
+| **Supabase Project** | Legacy DB |
+| **Project ID** | `hanemjoomxmyfbxrdbot` |
+| **Project URL** | https://hanemjoomxmyfbxrdbot.supabase.co |
+| **DB Host (direct)** | `db.hanemjoomxmyfbxrdbot.supabase.co` |
+| **DB Password** | `x8RTBR6by#4EYLk` |
+| **Schema** | `legacy` (will move to `public` after import) |
+| **Tables Created** | 147 |
+| **Source File** | `C:/Users/enova/OneDrive/Desktop/scanacart_1_12_26/scanacart_1_12_26.sql` |
+
+### Prerequisites for Import
+
+1. **Cloudflare WARP must be ON** - Provides IPv6 connectivity
+   - WARP installed at: `C:\Program Files\Cloudflare\Cloudflare WARP\`
+   - Toggle ON in system tray (bottom right)
+   - Without WARP, direct Supabase connection fails (IPv6 only)
+
+2. **Import script location:** `scripts/import-mysql-to-supabase.js`
+
+### If Claude Gets Frozen/Interrupted
+
+**To check import status:**
+```bash
+# Check if import is still running
+tasklist | grep node
+
+# Check import log
+tail -50 scripts/import-log.txt
+
+# Query row counts in Supabase (use SQL Editor in dashboard)
+SELECT relname as table_name, n_live_tup as rows
+FROM pg_stat_user_tables
+WHERE schemaname = 'legacy' AND n_live_tup > 0
+ORDER BY n_live_tup DESC;
+```
+
+**To restart import if it crashed:**
+```bash
+cd C:\Users\enova\projects\bh-brand-sites\bh-brand-sites
+node scripts/import-mysql-to-supabase.js
+```
+
+### After Import Completes
+
+1. **Move tables from `legacy` schema to `public`:**
+```sql
+-- Run this in Supabase SQL Editor for each table
+ALTER TABLE legacy.activity SET SCHEMA public;
+ALTER TABLE legacy.activity_location SET SCHEMA public;
+-- ... repeat for all 147 tables (Claude will generate the full script)
+```
+
+2. **Drop the empty legacy schema:**
+```sql
+DROP SCHEMA legacy;
+```
+
+3. **Verify data matches MySQL:**
+   - Compare row counts between MySQL and Supabase
+   - Spot check specific records
+
+### Estimated Time
+
+- **44GB file** with millions of rows
+- **Rate:** ~1-2 million rows per minute (varies by table)
+- **ETA:** 4-8 hours total (depends on largest tables)
+- **Biggest tables:** `label_password` (~131M rows), `label_password_validation` (~100M rows)
+
+### Important Tables to Verify
+
+| Table | Expected Rows (approx) | Purpose |
+|-------|------------------------|---------|
+| `label_password` | 131,500,000 | Verification codes |
+| `label_password_validation` | 100,000,000+ | Validation logs |
+| `nfc_tag` | 10,700,000 | NFC chip records |
+| `activity` | 12,000,000+ | Activity logs |
+| `client` | ~2,000 | Brand/company info |
+
+### Next Steps After Migration
+
+1. Move tables to `public` schema
+2. Verify row counts match MySQL
+3. Build APIs against this database
+4. Create dashboard
+5. Wire up Next.js to point here
+6. Eventually retire legacy MySQL
+
+### Uninstall Checklist (when done with WARP)
+
+```bash
+winget uninstall Cloudflare.Warp
+winget uninstall PostgreSQL.PostgreSQL.17
+```
 
 ---
 
