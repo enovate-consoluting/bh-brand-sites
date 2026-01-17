@@ -932,7 +932,7 @@ export function NimaHomePage({ siteConfig, previewClientId }: BrandPageProps) {
                       <div className="nima-slide-info">
                         <div className="nima-secHead">
                           <h4>{slide.title}</h4>
-                          {slide.subtitle && (
+                          {'subtitle' in slide && slide.subtitle && (
                             <h6>{slide.subtitle}</h6>
                           )}
                         </div>
@@ -957,18 +957,16 @@ export function NimaHomePage({ siteConfig, previewClientId }: BrandPageProps) {
                           >
                             {slide.cta.text}
                           </a>
-                          {'learnMore' in slide && (
-                            <a
-                              href={typeof (slide as { learnMore: string | { link: string } }).learnMore === 'string'
-                                ? (slide as { learnMore: string }).learnMore
-                                : (slide as { learnMore: { link: string } }).learnMore.link}
-                              className="nima-btn-secondary"
-                            >
-                              {typeof (slide as { learnMore: string | { text: string } }).learnMore === 'string'
-                                ? 'Learn More'
-                                : (slide as { learnMore: { text: string } }).learnMore.text}
-                            </a>
-                          )}
+                          {'learnMore' in slide && (() => {
+                            const lm = (slide as unknown as { learnMore: string | { link: string; text: string } }).learnMore;
+                            const href = typeof lm === 'string' ? lm : lm.link;
+                            const text = typeof lm === 'string' ? 'Learn More' : lm.text;
+                            return (
+                              <a href={href} className="nima-btn-secondary">
+                                {text}
+                              </a>
+                            );
+                          })()}
                         </div>
                       </div>
                     </div>
